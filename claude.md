@@ -956,7 +956,7 @@ When implementing this project:
 | Phase 6: Subdomain Routing | ✅ Complete | Middleware configured for subdomains |
 | Phase 7: Analytics | ✅ Complete | Page view tracking implemented |
 | Phase 8: Landing Page | ✅ Complete | Hero, features, CTA sections |
-| Phase 9: Polish | 🔄 In Progress | Ready for testing and deployment |
+| Phase 9: Polish | ✅ Complete | i18n, theme toggle, responsive design |
 
 ---
 
@@ -981,6 +981,20 @@ When implementing this project:
 - [x] Minimal Theme - Clean typography, whitespace
 - [x] Bento Theme - Grid-based modular layout
 - [x] Terminal Theme - Hacker aesthetic with typing effect
+
+### Internationalization (i18n)
+- [x] Multi-language support using `next-intl`
+- [x] 3 languages: English, Uzbek (O'zbekcha), Russian (Русский)
+- [x] Language selector in header (landing, login) and sidebar (dashboard)
+- [x] All UI text translated (landing, login, dashboard, projects, settings, theme)
+- [x] Language preference stored in cookies
+
+### Dark/Light Theme
+- [x] Theme toggle using `next-themes`
+- [x] Dark/Light mode support with CSS variables
+- [x] Theme toggle button in dashboard sidebar
+- [x] Theme preference persisted in localStorage
+- [x] System theme detection enabled
 
 ### Infrastructure
 - [x] Supabase database with RLS policies

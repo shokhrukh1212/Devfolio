@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import type { Profile } from "@/types";
 
 const profileFormSchema = z.object({
@@ -51,6 +52,9 @@ interface SettingsContentProps {
 export function SettingsContent({ profile }: SettingsContentProps) {
   const [isUpdating, setIsUpdating] = useState(false);
   const supabase = createClient();
+  const t = useTranslations("settings");
+  const tCommon = useTranslations("common");
+  const tToast = useTranslations("toast");
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -89,9 +93,9 @@ export function SettingsContent({ profile }: SettingsContentProps) {
 
       if (error) throw error;
 
-      toast.success("Profile updated successfully");
+      toast.success(tToast("profileUpdated"));
     } catch (error) {
-      toast.error("Failed to update profile");
+      toast.error(tToast("profileUpdateFailed"));
       console.error(error);
     } finally {
       setIsUpdating(false);
@@ -101,9 +105,9 @@ export function SettingsContent({ profile }: SettingsContentProps) {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
-        <h1 className="text-3xl font-bold font-heading">Profile Settings</h1>
+        <h1 className="text-3xl font-bold font-heading">{t("title")}</h1>
         <p className="text-muted-foreground mt-1">
-          This information will be displayed on your public portfolio.
+          {t("description")}
         </p>
       </div>
 
@@ -112,9 +116,9 @@ export function SettingsContent({ profile }: SettingsContentProps) {
           {/* Publish Toggle */}
           <Card>
             <CardHeader>
-              <CardTitle>Portfolio Status</CardTitle>
+              <CardTitle>{t("portfolioStatus.title")}</CardTitle>
               <CardDescription>
-                Control whether your portfolio is publicly visible.
+                {t("portfolioStatus.description")}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -125,10 +129,10 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                   <FormItem className="flex items-center justify-between rounded-lg border p-4">
                     <div className="space-y-0.5">
                       <FormLabel className="text-base">
-                        Publish Portfolio
+                        {t("portfolioStatus.publishLabel")}
                       </FormLabel>
                       <FormDescription>
-                        When enabled, your portfolio will be visible at{" "}
+                        {t("portfolioStatus.publishDescription")}{" "}
                         <code className="text-xs bg-muted px-1 py-0.5 rounded">
                           {profile?.username}.devfolio.uz
                         </code>
@@ -149,9 +153,9 @@ export function SettingsContent({ profile }: SettingsContentProps) {
           {/* Basic Information */}
           <Card>
             <CardHeader>
-              <CardTitle>Basic Information</CardTitle>
+              <CardTitle>{t("basicInfo.title")}</CardTitle>
               <CardDescription>
-                Tell us about yourself and what you do.
+                {t("basicInfo.description")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -160,9 +164,9 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                 name="display_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Display Name</FormLabel>
+                    <FormLabel>{t("basicInfo.displayName")}</FormLabel>
                     <FormControl>
-                      <Input placeholder="John Doe" {...field} />
+                      <Input placeholder={t("basicInfo.displayNamePlaceholder")} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -174,16 +178,16 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                 name="bio"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Bio</FormLabel>
+                    <FormLabel>{t("basicInfo.bio")}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Full Stack Developer passionate about..."
+                        placeholder={t("basicInfo.bioPlaceholder")}
                         className="resize-none min-h-[100px]"
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      A brief description of who you are.
+                      {t("basicInfo.bioDescription")}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -196,9 +200,9 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                   name="location"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Location</FormLabel>
+                      <FormLabel>{t("basicInfo.location")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="San Francisco, CA" {...field} />
+                        <Input placeholder={t("basicInfo.locationPlaceholder")} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -210,9 +214,9 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Contact Email</FormLabel>
+                      <FormLabel>{t("basicInfo.email")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="hello@example.com" {...field} />
+                        <Input placeholder={t("basicInfo.emailPlaceholder")} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -225,9 +229,9 @@ export function SettingsContent({ profile }: SettingsContentProps) {
           {/* Social Links */}
           <Card>
             <CardHeader>
-              <CardTitle>Social Links</CardTitle>
+              <CardTitle>{t("socialLinks.title")}</CardTitle>
               <CardDescription>
-                Connect your visitors to your other profiles.
+                {t("socialLinks.description")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -237,10 +241,10 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                   name="github_url"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>GitHub URL</FormLabel>
+                      <FormLabel>{t("socialLinks.github")}</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="https://github.com/..."
+                          placeholder={t("socialLinks.githubPlaceholder")}
                           {...field}
                         />
                       </FormControl>
@@ -254,10 +258,10 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                   name="linkedin_url"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>LinkedIn URL</FormLabel>
+                      <FormLabel>{t("socialLinks.linkedin")}</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="https://linkedin.com/in/..."
+                          placeholder={t("socialLinks.linkedinPlaceholder")}
                           {...field}
                         />
                       </FormControl>
@@ -271,9 +275,9 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                   name="website_url"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Personal Website</FormLabel>
+                      <FormLabel>{t("socialLinks.website")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="https://..." {...field} />
+                        <Input placeholder={t("socialLinks.websitePlaceholder")} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -285,9 +289,9 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                   name="twitter_url"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Twitter / X URL</FormLabel>
+                      <FormLabel>{t("socialLinks.twitter")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="https://x.com/..." {...field} />
+                        <Input placeholder={t("socialLinks.twitterPlaceholder")} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -300,7 +304,7 @@ export function SettingsContent({ profile }: SettingsContentProps) {
           <div className="flex justify-end">
             <Button type="submit" size="lg" disabled={isUpdating}>
               {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Save Changes
+              {tCommon("save")}
             </Button>
           </div>
         </form>

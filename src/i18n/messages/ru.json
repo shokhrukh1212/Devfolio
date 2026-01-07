@@ -1,0 +1,197 @@
+{
+  "common": {
+    "signIn": "Войти",
+    "signOut": "Выйти",
+    "save": "Сохранить изменения",
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "loading": "Загрузка...",
+    "search": "Поиск",
+    "devfolio": "Devfolio"
+  },
+  "landing": {
+    "hero": {
+      "badge": "Создайте портфолио за 60 секунд",
+      "title": "GitHub \u2192 Портфолио \u2192 Поделиться",
+      "description": "Превратите свой GitHub профиль в красивое портфолио разработчика. Навыки дизайна не требуются. Выберите тему, импортируйте проекты и запускайтесь мгновенно."
+    },
+    "cta": {
+      "getStarted": "Начать с GitHub",
+      "startBuilding": "Начать создание"
+    },
+    "features": {
+      "quickSetup": {
+        "title": "Быстрая настройка",
+        "description": "Войдите через GitHub, выберите лучшие проекты, и ваше портфолио готово меньше чем за минуту."
+      },
+      "themes": {
+        "title": "3 красивых темы",
+        "description": "Выбирайте из Minimal, Bento Grid или Terminal Dark. Каждая тема адаптивна и SEO-оптимизирована."
+      },
+      "subdomain": {
+        "title": "Бесплатный поддомен",
+        "description": "Получите своё портфолио по адресу username.devfolio.uz. Пользовательские домены скоро."
+      }
+    },
+    "ctaSection": {
+      "title": "Готовы создать своё портфолио?",
+      "description": "Присоединяйтесь к разработчикам, которые используют Devfolio для демонстрации своих работ и получения возможностей."
+    },
+    "footer": {
+      "copyright": "\u00a9 {year} Devfolio. Все права защищены."
+    }
+  },
+  "login": {
+    "tagline": "GitHub \u2192 Портфолио \u2192 Поделиться за 60 секунд",
+    "title": "Добро пожаловать",
+    "description": "Создайте портфолио разработчика за несколько минут",
+    "continueWithGithub": "Продолжить с GitHub",
+    "terms": "Продолжая, вы соглашаетесь с Условиями использования",
+    "quickSetup": "Быстрая настройка",
+    "themes": "3 темы",
+    "freeSubdomain": "Бесплатный поддомен"
+  },
+  "dashboard": {
+    "sidebar": {
+      "buildShowcase": "Создайте свою витрину",
+      "overview": "Обзор",
+      "projects": "Проекты",
+      "profile": "Профиль",
+      "theme": "Тема",
+      "viewPortfolio": "Смотреть портфолио",
+      "signOut": "Выйти"
+    },
+    "overview": {
+      "welcome": "С возвращением, {name}",
+      "subtitle": "Вот что происходит с вашим портфолио сегодня.",
+      "manageProjects": "Управление проектами",
+      "totalProjects": "Всего проектов",
+      "currentlyVisible": "{count} сейчас видно",
+      "totalStars": "Всего звёзд",
+      "acrossRepos": "По всем репозиториям",
+      "profileViews": "Просмотры профиля",
+      "lastDays": "Последние 7 дней",
+      "visitorActivity": "Активность посетителей",
+      "viewsOverDays": "Просмотры за последние 7 дней"
+    },
+    "days": {
+      "sun": "Вс",
+      "mon": "Пн",
+      "tue": "Вт",
+      "wed": "Ср",
+      "thu": "Чт",
+      "fri": "Пт",
+      "sat": "Сб"
+    }
+  },
+  "projects": {
+    "title": "Проекты",
+    "description": "Управляйте тем, какие репозитории отображаются в вашем портфолио.",
+    "syncFromGithub": "Синхронизация с GitHub",
+    "searchPlaceholder": "Поиск проектов...",
+    "noProjectsFound": "Проекты не найдены",
+    "syncToGetStarted": "Синхронизируйте репозитории GitHub, чтобы начать.",
+    "syncProjects": "Синхронизировать проекты",
+    "visible": "Видимый",
+    "featured": "Избранный",
+    "stars": "звёзд",
+    "forks": "форков",
+    "code": "Код",
+    "demo": "Демо",
+    "deleteConfirm": {
+      "title": "Вы абсолютно уверены?",
+      "description": "Это действие нельзя отменить. Проект будет навсегда удалён из вашего портфолио."
+    },
+    "sync": {
+      "title": "Синхронизация с GitHub",
+      "description": "Введите имя пользователя GitHub для получения публичных репозиториев.",
+      "usernameLabel": "Имя пользователя GitHub",
+      "usernamePlaceholder": "напр. torvalds",
+      "syncing": "Синхронизация..."
+    }
+  },
+  "settings": {
+    "title": "Настройки профиля",
+    "description": "Эта информация будет отображаться в вашем публичном портфолио.",
+    "portfolioStatus": {
+      "title": "Статус портфолио",
+      "description": "Управляйте публичной видимостью вашего портфолио.",
+      "publishLabel": "Опубликовать портфолио",
+      "publishDescription": "При включении ваше портфолио будет доступно по адресу"
+    },
+    "basicInfo": {
+      "title": "Основная информация",
+      "description": "Расскажите о себе и чем вы занимаетесь.",
+      "displayName": "Отображаемое имя",
+      "displayNamePlaceholder": "Иван Иванов",
+      "bio": "Биография",
+      "bioPlaceholder": "Full Stack разработчик, увлечённый...",
+      "bioDescription": "Краткое описание того, кто вы.",
+      "location": "Местоположение",
+      "locationPlaceholder": "Москва, Россия",
+      "email": "Контактный email",
+      "emailPlaceholder": "привет@пример.com"
+    },
+    "socialLinks": {
+      "title": "Социальные ссылки",
+      "description": "Свяжите посетителей с вашими другими профилями.",
+      "github": "GitHub URL",
+      "githubPlaceholder": "https://github.com/...",
+      "linkedin": "LinkedIn URL",
+      "linkedinPlaceholder": "https://linkedin.com/in/...",
+      "website": "Личный сайт",
+      "websitePlaceholder": "https://...",
+      "twitter": "Twitter / X URL",
+      "twitterPlaceholder": "https://x.com/..."
+    }
+  },
+  "themeSelection": {
+    "title": "Выбор темы",
+    "description": "Выберите, как ваше портфолио будет выглядеть для мира. Изменения применяются мгновенно.",
+    "preview": {
+      "title": "Предпросмотр портфолио",
+      "description": "Посмотрите, как выбранная тема выглядит с вашими данными.",
+      "viewLive": "Смотреть портфолио"
+    },
+    "themes": {
+      "minimal": {
+        "name": "Минимальная",
+        "description": "Чистая типографика и пространство для изысканного вида."
+      },
+      "bento": {
+        "name": "Bento",
+        "description": "Сеточная модульная компоновка в стиле современных дашбордов."
+      },
+      "terminal": {
+        "name": "Терминал",
+        "description": "Моноширинные шрифты и высокий контраст для хакерской эстетики."
+      }
+    }
+  },
+  "toast": {
+    "profileUpdated": "Профиль успешно обновлён",
+    "profileUpdateFailed": "Не удалось обновить профиль",
+    "projectUpdated": "Проект обновлён",
+    "projectUpdateFailed": "Не удалось обновить проект",
+    "projectDeleted": "Проект удалён",
+    "projectDeleteFailed": "Не удалось удалить проект",
+    "themeChanged": "Тема изменена на {theme}",
+    "themeChangeFailed": "Не удалось обновить тему",
+    "syncSuccess": "Синхронизировано {count} проектов с GitHub",
+    "syncFailed": "Не удалось синхронизировать проекты"
+  },
+  "theme": {
+    "light": "Светлый режим",
+    "dark": "Тёмный режим",
+    "system": "Системный"
+  },
+  "language": {
+    "label": "Язык",
+    "en": "English",
+    "uz": "O'zbekcha",
+    "ru": "Русский"
+  },
+  "validation": {
+    "displayNameRequired": "Отображаемое имя обязательно"
+  }
+}

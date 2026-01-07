@@ -1,0 +1,197 @@
+{
+  "common": {
+    "signIn": "Sign In",
+    "signOut": "Log out",
+    "save": "Save Changes",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "loading": "Loading...",
+    "search": "Search",
+    "devfolio": "Devfolio"
+  },
+  "landing": {
+    "hero": {
+      "badge": "Build your portfolio in 60 seconds",
+      "title": "GitHub \u2192 Portfolio \u2192 Share",
+      "description": "Transform your GitHub profile into a beautiful developer portfolio. No design skills required. Choose a theme, import your projects, and go live instantly."
+    },
+    "cta": {
+      "getStarted": "Get Started with GitHub",
+      "startBuilding": "Start Building"
+    },
+    "features": {
+      "quickSetup": {
+        "title": "Quick Setup",
+        "description": "Sign in with GitHub, select your best projects, and your portfolio is ready in under a minute."
+      },
+      "themes": {
+        "title": "3 Beautiful Themes",
+        "description": "Choose from Minimal, Bento Grid, or Terminal Dark. Each theme is mobile-friendly and SEO-ready."
+      },
+      "subdomain": {
+        "title": "Free Subdomain",
+        "description": "Get your own portfolio at username.devfolio.uz. Custom domains coming soon."
+      }
+    },
+    "ctaSection": {
+      "title": "Ready to build your portfolio?",
+      "description": "Join developers who use Devfolio to showcase their work and land opportunities."
+    },
+    "footer": {
+      "copyright": "\u00a9 {year} Devfolio. All rights reserved."
+    }
+  },
+  "login": {
+    "tagline": "GitHub \u2192 Portfolio \u2192 Share in 60 seconds",
+    "title": "Welcome",
+    "description": "Create your developer portfolio in minutes",
+    "continueWithGithub": "Continue with GitHub",
+    "terms": "By continuing, you agree to our Terms of Service",
+    "quickSetup": "Quick Setup",
+    "themes": "3 Themes",
+    "freeSubdomain": "Free Subdomain"
+  },
+  "dashboard": {
+    "sidebar": {
+      "buildShowcase": "Build your showcase",
+      "overview": "Overview",
+      "projects": "Projects",
+      "profile": "Profile",
+      "theme": "Theme",
+      "viewPortfolio": "View Portfolio",
+      "signOut": "Log out"
+    },
+    "overview": {
+      "welcome": "Welcome back, {name}",
+      "subtitle": "Here's what's happening with your portfolio today.",
+      "manageProjects": "Manage Projects",
+      "totalProjects": "Total Projects",
+      "currentlyVisible": "{count} currently visible",
+      "totalStars": "Total Stars",
+      "acrossRepos": "Across all repositories",
+      "profileViews": "Profile Views",
+      "lastDays": "Last 7 days",
+      "visitorActivity": "Visitor Activity",
+      "viewsOverDays": "Views over the last 7 days"
+    },
+    "days": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "description": "Manage which repositories appear on your portfolio.",
+    "syncFromGithub": "Sync from GitHub",
+    "searchPlaceholder": "Search projects...",
+    "noProjectsFound": "No projects found",
+    "syncToGetStarted": "Sync your GitHub repositories to get started.",
+    "syncProjects": "Sync Projects",
+    "visible": "Visible",
+    "featured": "Featured",
+    "stars": "stars",
+    "forks": "forks",
+    "code": "Code",
+    "demo": "Demo",
+    "deleteConfirm": {
+      "title": "Are you absolutely sure?",
+      "description": "This action cannot be undone. This will permanently remove the project from your portfolio."
+    },
+    "sync": {
+      "title": "Sync from GitHub",
+      "description": "Enter your GitHub username to fetch your public repositories.",
+      "usernameLabel": "GitHub Username",
+      "usernamePlaceholder": "e.g. torvalds",
+      "syncing": "Syncing..."
+    }
+  },
+  "settings": {
+    "title": "Profile Settings",
+    "description": "This information will be displayed on your public portfolio.",
+    "portfolioStatus": {
+      "title": "Portfolio Status",
+      "description": "Control whether your portfolio is publicly visible.",
+      "publishLabel": "Publish Portfolio",
+      "publishDescription": "When enabled, your portfolio will be visible at"
+    },
+    "basicInfo": {
+      "title": "Basic Information",
+      "description": "Tell us about yourself and what you do.",
+      "displayName": "Display Name",
+      "displayNamePlaceholder": "John Doe",
+      "bio": "Bio",
+      "bioPlaceholder": "Full Stack Developer passionate about...",
+      "bioDescription": "A brief description of who you are.",
+      "location": "Location",
+      "locationPlaceholder": "San Francisco, CA",
+      "email": "Contact Email",
+      "emailPlaceholder": "hello@example.com"
+    },
+    "socialLinks": {
+      "title": "Social Links",
+      "description": "Connect your visitors to your other profiles.",
+      "github": "GitHub URL",
+      "githubPlaceholder": "https://github.com/...",
+      "linkedin": "LinkedIn URL",
+      "linkedinPlaceholder": "https://linkedin.com/in/...",
+      "website": "Personal Website",
+      "websitePlaceholder": "https://...",
+      "twitter": "Twitter / X URL",
+      "twitterPlaceholder": "https://x.com/..."
+    }
+  },
+  "themeSelection": {
+    "title": "Theme Selection",
+    "description": "Choose how your portfolio looks to the world. Changes are applied immediately.",
+    "preview": {
+      "title": "Preview your portfolio",
+      "description": "See how your selected theme looks with your real data.",
+      "viewLive": "View Live Portfolio"
+    },
+    "themes": {
+      "minimal": {
+        "name": "Minimal",
+        "description": "Clean typography and whitespace for a sophisticated look."
+      },
+      "bento": {
+        "name": "Bento",
+        "description": "Grid-based modular layout inspired by modern dashboard design."
+      },
+      "terminal": {
+        "name": "Terminal",
+        "description": "Monospace fonts and high contrast for the hacker aesthetic."
+      }
+    }
+  },
+  "toast": {
+    "profileUpdated": "Profile updated successfully",
+    "profileUpdateFailed": "Failed to update profile",
+    "projectUpdated": "Project updated",
+    "projectUpdateFailed": "Failed to update project",
+    "projectDeleted": "Project deleted",
+    "projectDeleteFailed": "Failed to delete project",
+    "themeChanged": "Theme changed to {theme}",
+    "themeChangeFailed": "Failed to update theme",
+    "syncSuccess": "Synced {count} projects from GitHub",
+    "syncFailed": "Failed to sync projects"
+  },
+  "theme": {
+    "light": "Light Mode",
+    "dark": "Dark Mode",
+    "system": "System"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "uz": "O'zbekcha",
+    "ru": "Русский"
+  },
+  "validation": {
+    "displayNameRequired": "Display name is required"
+  }
+}

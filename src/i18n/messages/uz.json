@@ -1,0 +1,197 @@
+{
+  "common": {
+    "signIn": "Kirish",
+    "signOut": "Chiqish",
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "delete": "O'chirish",
+    "loading": "Yuklanmoqda...",
+    "search": "Qidirish",
+    "devfolio": "Devfolio"
+  },
+  "landing": {
+    "hero": {
+      "badge": "60 soniyada portfolio yarating",
+      "title": "GitHub \u2192 Portfolio \u2192 Ulashing",
+      "description": "GitHub profilingizni chiroyli dasturchi portfoliosiga aylantiring. Dizayn ko'nikmalari shart emas. Mavzuni tanlang, loyihalaringizni import qiling va darhol jonlantiring."
+    },
+    "cta": {
+      "getStarted": "GitHub bilan boshlash",
+      "startBuilding": "Yaratishni boshlash"
+    },
+    "features": {
+      "quickSetup": {
+        "title": "Tez sozlash",
+        "description": "GitHub bilan kiring, eng yaxshi loyihalaringizni tanlang va portfolioingiz bir daqiqadan kamroq vaqtda tayyor."
+      },
+      "themes": {
+        "title": "3 ta chiroyli mavzu",
+        "description": "Minimal, Bento Grid yoki Terminal Dark dan tanlang. Har bir mavzu mobil qurilmalarga moslashgan va SEO-tayyor."
+      },
+      "subdomain": {
+        "title": "Bepul subdomen",
+        "description": "username.devfolio.uz manzilida o'z portfolioingizga ega bo'ling. Maxsus domenlar tez orada."
+      }
+    },
+    "ctaSection": {
+      "title": "Portfolioingizni yaratishga tayyormisiz?",
+      "description": "Devfolio yordamida ishlarini namoyish qilayotgan va imkoniyatlarni qo'lga kiritayotgan dasturchilarga qo'shiling."
+    },
+    "footer": {
+      "copyright": "\u00a9 {year} Devfolio. Barcha huquqlar himoyalangan."
+    }
+  },
+  "login": {
+    "tagline": "GitHub \u2192 Portfolio \u2192 60 soniyada ulashing",
+    "title": "Xush kelibsiz",
+    "description": "Bir necha daqiqada dasturchi portfolioingizni yarating",
+    "continueWithGithub": "GitHub bilan davom etish",
+    "terms": "Davom etish orqali Foydalanish shartlariga rozilik bildirasiz",
+    "quickSetup": "Tez sozlash",
+    "themes": "3 ta mavzu",
+    "freeSubdomain": "Bepul subdomen"
+  },
+  "dashboard": {
+    "sidebar": {
+      "buildShowcase": "Namoyishingizni yarating",
+      "overview": "Umumiy ko'rinish",
+      "projects": "Loyihalar",
+      "profile": "Profil",
+      "theme": "Mavzu",
+      "viewPortfolio": "Portfolioni ko'rish",
+      "signOut": "Chiqish"
+    },
+    "overview": {
+      "welcome": "Xush kelibsiz, {name}",
+      "subtitle": "Bugun portfolioingizda nima sodir bo'layotgani.",
+      "manageProjects": "Loyihalarni boshqarish",
+      "totalProjects": "Jami loyihalar",
+      "currentlyVisible": "{count} ta hozirda ko'rinadi",
+      "totalStars": "Jami yulduzlar",
+      "acrossRepos": "Barcha repozitoriyalarda",
+      "profileViews": "Profil ko'rishlar",
+      "lastDays": "Oxirgi 7 kun",
+      "visitorActivity": "Tashrif buyuruvchilar faoliyati",
+      "viewsOverDays": "Oxirgi 7 kundagi ko'rishlar"
+    },
+    "days": {
+      "sun": "Yak",
+      "mon": "Dush",
+      "tue": "Sesh",
+      "wed": "Chor",
+      "thu": "Pay",
+      "fri": "Jum",
+      "sat": "Shan"
+    }
+  },
+  "projects": {
+    "title": "Loyihalar",
+    "description": "Portfolioingizda qaysi repozitoriyalar ko'rinishini boshqaring.",
+    "syncFromGithub": "GitHub dan sinxronlash",
+    "searchPlaceholder": "Loyihalarni qidirish...",
+    "noProjectsFound": "Loyihalar topilmadi",
+    "syncToGetStarted": "Boshlash uchun GitHub repozitoriyalaringizni sinxronlang.",
+    "syncProjects": "Loyihalarni sinxronlash",
+    "visible": "Ko'rinadi",
+    "featured": "Tanlangan",
+    "stars": "yulduz",
+    "forks": "fork",
+    "code": "Kod",
+    "demo": "Demo",
+    "deleteConfirm": {
+      "title": "Haqiqatan ham ishonchingiz komilmi?",
+      "description": "Bu amalni bekor qilib bo'lmaydi. Bu loyihani portfolioingizdan butunlay olib tashlaydi."
+    },
+    "sync": {
+      "title": "GitHub dan sinxronlash",
+      "description": "Ochiq repozitoriyalaringizni olish uchun GitHub foydalanuvchi nomingizni kiriting.",
+      "usernameLabel": "GitHub foydalanuvchi nomi",
+      "usernamePlaceholder": "masalan, torvalds",
+      "syncing": "Sinxronlanmoqda..."
+    }
+  },
+  "settings": {
+    "title": "Profil sozlamalari",
+    "description": "Bu ma'lumot ochiq portfolioingizda ko'rsatiladi.",
+    "portfolioStatus": {
+      "title": "Portfolio holati",
+      "description": "Portfolioingiz ommaviy ko'rinishini boshqaring.",
+      "publishLabel": "Portfolioni nashr qilish",
+      "publishDescription": "Yoqilganda, portfolioingiz quyidagi manzilda ko'rinadi"
+    },
+    "basicInfo": {
+      "title": "Asosiy ma'lumotlar",
+      "description": "O'zingiz va nimalar qilishingiz haqida gapirib bering.",
+      "displayName": "Ko'rsatiladigan ism",
+      "displayNamePlaceholder": "Ism Familiya",
+      "bio": "Biografiya",
+      "bioPlaceholder": "Full Stack dasturchi, ...",
+      "bioDescription": "O'zingiz haqingizda qisqacha tavsif.",
+      "location": "Joylashuv",
+      "locationPlaceholder": "Toshkent, O'zbekiston",
+      "email": "Aloqa elektron pochtasi",
+      "emailPlaceholder": "salom@misol.com"
+    },
+    "socialLinks": {
+      "title": "Ijtimoiy havolalar",
+      "description": "Tashrif buyuruvchilaringizni boshqa profillaringizga ulang.",
+      "github": "GitHub URL",
+      "githubPlaceholder": "https://github.com/...",
+      "linkedin": "LinkedIn URL",
+      "linkedinPlaceholder": "https://linkedin.com/in/...",
+      "website": "Shaxsiy veb-sayt",
+      "websitePlaceholder": "https://...",
+      "twitter": "Twitter / X URL",
+      "twitterPlaceholder": "https://x.com/..."
+    }
+  },
+  "themeSelection": {
+    "title": "Mavzu tanlash",
+    "description": "Portfolioingiz dunyoga qanday ko'rinishini tanlang. O'zgarishlar darhol qo'llaniladi.",
+    "preview": {
+      "title": "Portfolioingizni ko'rib chiqing",
+      "description": "Tanlangan mavzu haqiqiy ma'lumotlaringiz bilan qanday ko'rinishini ko'ring.",
+      "viewLive": "Jonli portfolioni ko'rish"
+    },
+    "themes": {
+      "minimal": {
+        "name": "Minimal",
+        "description": "Nafis ko'rinish uchun toza tipografiya va bo'sh joy."
+      },
+      "bento": {
+        "name": "Bento",
+        "description": "Zamonaviy boshqaruv paneli dizaynidan ilhomlangan panjara asosidagi modul tartib."
+      },
+      "terminal": {
+        "name": "Terminal",
+        "description": "Haker estetikasi uchun monospace shriftlar va yuqori kontrast."
+      }
+    }
+  },
+  "toast": {
+    "profileUpdated": "Profil muvaffaqiyatli yangilandi",
+    "profileUpdateFailed": "Profilni yangilashda xatolik",
+    "projectUpdated": "Loyiha yangilandi",
+    "projectUpdateFailed": "Loyihani yangilashda xatolik",
+    "projectDeleted": "Loyiha o'chirildi",
+    "projectDeleteFailed": "Loyihani o'chirishda xatolik",
+    "themeChanged": "Mavzu {theme} ga o'zgartirildi",
+    "themeChangeFailed": "Mavzuni yangilashda xatolik",
+    "syncSuccess": "GitHub dan {count} ta loyiha sinxronlandi",
+    "syncFailed": "Loyihalarni sinxronlashda xatolik"
+  },
+  "theme": {
+    "light": "Yorug' rejim",
+    "dark": "Qorong'i rejim",
+    "system": "Tizim"
+  },
+  "language": {
+    "label": "Til",
+    "en": "English",
+    "uz": "O'zbekcha",
+    "ru": "Русский"
+  },
+  "validation": {
+    "displayNameRequired": "Ko'rsatiladigan ism talab qilinadi"
+  }
+}

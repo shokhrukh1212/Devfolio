@@ -7,35 +7,28 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Check, LayoutTemplate, Terminal, Type } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import type { Profile, ThemeName } from "@/types";
 
 interface ThemeOption {
   id: ThemeName;
-  name: string;
-  description: string;
   icon: React.ReactNode;
   colors: string;
 }
 
-const themes: ThemeOption[] = [
+const themeOptions: ThemeOption[] = [
   {
     id: "minimal",
-    name: "Minimal",
-    description: "Clean typography and whitespace for a sophisticated look.",
     icon: <Type className="w-5 h-5" />,
     colors: "bg-white border-zinc-200",
   },
   {
     id: "bento",
-    name: "Bento",
-    description: "Grid-based modular layout inspired by modern dashboard design.",
     icon: <LayoutTemplate className="w-5 h-5" />,
     colors: "bg-zinc-50 border-zinc-200",
   },
   {
     id: "terminal",
-    name: "Terminal",
-    description: "Monospace fonts and high contrast for the hacker aesthetic.",
     icon: <Terminal className="w-5 h-5" />,
     colors: "bg-zinc-950 border-zinc-800 text-green-400",
   },
@@ -51,6 +44,8 @@ export function ThemeContent({ profile }: ThemeContentProps) {
   );
   const [isUpdating, setIsUpdating] = useState(false);
   const supabase = createClient();
+  const t = useTranslations("themeSelection");
+  const tToast = useTranslations("toast");
 
   const handleThemeChange = async (themeId: ThemeName) => {
     setIsUpdating(true);
@@ -63,9 +58,9 @@ export function ThemeContent({ profile }: ThemeContentProps) {
       if (error) throw error;
 
       setCurrentTheme(themeId);
-      toast.success(`Theme changed to ${themeId}`);
+      toast.success(tToast("themeChanged", { theme: t(`themes.${themeId}.name`) }));
     } catch (error) {
-      toast.error("Failed to update theme");
+      toast.error(tToast("themeChangeFailed"));
       console.error(error);
     } finally {
       setIsUpdating(false);
@@ -75,16 +70,15 @@ export function ThemeContent({ profile }: ThemeContentProps) {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold font-heading">Theme Selection</h1>
+        <h1 className="text-3xl font-bold font-heading">{t("title")}</h1>
         <p className="text-muted-foreground mt-1">
-          Choose how your portfolio looks to the world. Changes are applied
-          immediately.
+          {t("description")}
         </p>
       </div>
 
       {/* Theme Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {themes.map((theme) => {
+        {themeOptions.map((theme) => {
           const isActive = currentTheme === theme.id;
 
           return (
@@ -123,7 +117,7 @@ export function ThemeContent({ profile }: ThemeContentProps) {
                   theme.id === "terminal" ? "text-green-400" : "text-foreground"
                 )}
               >
-                {theme.name}
+                {t(`themes.${theme.id}.name`)}
               </h3>
 
               <p
@@ -134,7 +128,7 @@ export function ThemeContent({ profile }: ThemeContentProps) {
                     : "text-muted-foreground"
                 )}
               >
-                {theme.description}
+                {t(`themes.${theme.id}.description`)}
               </p>
             </button>
           );
@@ -143,12 +137,12 @@ export function ThemeContent({ profile }: ThemeContentProps) {
 
       {/* Preview Section */}
       <div className="bg-muted/30 border border-dashed rounded-xl p-8 text-center">
-        <h2 className="text-lg font-semibold mb-2">Preview your portfolio</h2>
+        <h2 className="text-lg font-semibold mb-2">{t("preview.title")}</h2>
         <p className="text-muted-foreground mb-6">
-          See how your selected theme looks with your real data.
+          {t("preview.description")}
         </p>
         <Link href={`/portfolio/${profile?.username}`} target="_blank">
-          <Button>View Live Portfolio</Button>
+          <Button>{t("preview.viewLive")}</Button>
         </Link>
       </div>
     </div>
