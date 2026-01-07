@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowRight, Eye, FolderGit2, Star } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { useTranslations } from "next-intl";
 import type { Profile, Project, AnalyticsEvent } from "@/types";
 
 interface DashboardContentProps {
@@ -15,6 +16,8 @@ interface DashboardContentProps {
 }
 
 export function DashboardContent({ profile, projects, analytics }: DashboardContentProps) {
+  const t = useTranslations("dashboard.overview");
+  const tDays = useTranslations("dashboard.days");
   // Calculate stats
   const totalProjects = projects.length;
   const visibleProjects = projects.filter((p) => p.is_visible).length;
@@ -29,16 +32,16 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold font-heading text-foreground">
-            Welcome back, {profile?.display_name?.split(" ")[0] || "Developer"}
+            {t("welcome", { name: profile?.display_name?.split(" ")[0] || "Developer" })}
           </h1>
           <p className="text-muted-foreground mt-1">
-            Here&apos;s what&apos;s happening with your portfolio today.
+            {t("subtitle")}
           </p>
         </div>
 
         <Link href="/dashboard/projects">
           <Button>
-            Manage Projects <ArrowRight className="ml-2 w-4 h-4" />
+            {t("manageProjects")} <ArrowRight className="ml-2 w-4 h-4" />
           </Button>
         </Link>
       </div>
@@ -47,36 +50,36 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Projects</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("totalProjects")}</CardTitle>
             <FolderGit2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalProjects}</div>
             <p className="text-xs text-muted-foreground">
-              {visibleProjects} currently visible
+              {t("currentlyVisible", { count: visibleProjects })}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Stars</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("totalStars")}</CardTitle>
             <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalStars}</div>
-            <p className="text-xs text-muted-foreground">Across all repositories</p>
+            <p className="text-xs text-muted-foreground">{t("acrossRepos")}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Profile Views</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("profileViews")}</CardTitle>
             <Eye className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalViews}</div>
-            <p className="text-xs text-muted-foreground">Last 7 days</p>
+            <p className="text-xs text-muted-foreground">{t("lastDays")}</p>
           </CardContent>
         </Card>
       </div>
@@ -84,8 +87,8 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
       {/* Analytics Chart */}
       <Card>
         <CardHeader>
-          <CardTitle>Visitor Activity</CardTitle>
-          <CardDescription>Views over the last 7 days</CardDescription>
+          <CardTitle>{t("visitorActivity")}</CardTitle>
+          <CardDescription>{t("viewsOverDays")}</CardDescription>
         </CardHeader>
         <CardContent className="pl-2">
           <div className="h-[240px] w-full">

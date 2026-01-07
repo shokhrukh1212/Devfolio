@@ -17,6 +17,9 @@ import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LanguageSelector } from "@/components/language-selector";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { useTranslations } from "next-intl";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import type { Profile } from "@/types";
 
@@ -29,12 +32,13 @@ export function DashboardSidebar({ user, profile }: DashboardSidebarProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const supabase = createClient();
+  const t = useTranslations("dashboard.sidebar");
 
   const navItems = [
-    { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
-    { href: "/dashboard/projects", label: "Projects", icon: FolderGit2 },
-    { href: "/dashboard/settings", label: "Profile", icon: User },
-    { href: "/dashboard/theme", label: "Theme", icon: Palette },
+    { href: "/dashboard", label: t("overview"), icon: LayoutDashboard },
+    { href: "/dashboard/projects", label: t("projects"), icon: FolderGit2 },
+    { href: "/dashboard/settings", label: t("profile"), icon: User },
+    { href: "/dashboard/theme", label: t("theme"), icon: Palette },
   ];
 
   const handleLogout = async () => {
@@ -77,7 +81,7 @@ export function DashboardSidebar({ user, profile }: DashboardSidebarProps) {
             Devfolio
           </h1>
           <p className="text-xs text-muted-foreground mt-1">
-            Build your showcase
+            {t("buildShowcase")}
           </p>
         </div>
 
@@ -122,7 +126,13 @@ export function DashboardSidebar({ user, profile }: DashboardSidebarProps) {
         </nav>
 
         {/* Footer Actions */}
-        <div className="p-4 border-t border-border space-y-3">
+        <div className="p-4 border-t border-border space-y-2">
+          {/* Language Selector */}
+          <LanguageSelector variant="sidebar" />
+
+          {/* Theme Toggle */}
+          <ThemeToggle />
+
           {profile?.username && (
             <a
               href={`/portfolio/${profile.username}`}
@@ -130,7 +140,7 @@ export function DashboardSidebar({ user, profile }: DashboardSidebarProps) {
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
             >
-              View Portfolio <ExternalLink className="w-3.5 h-3.5" />
+              {t("viewPortfolio")} <ExternalLink className="w-3.5 h-3.5" />
             </a>
           )}
 
@@ -140,7 +150,7 @@ export function DashboardSidebar({ user, profile }: DashboardSidebarProps) {
             onClick={handleLogout}
           >
             <LogOut className="w-4 h-4 mr-2" />
-            Log out
+            {t("signOut")}
           </Button>
         </div>
       </aside>
