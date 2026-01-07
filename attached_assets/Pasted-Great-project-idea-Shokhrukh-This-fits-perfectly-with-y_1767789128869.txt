@@ -1,0 +1,59 @@
+Great project idea, Shokhrukh! This fits perfectly with your SaaS ambitions and targets a real pain point for developers. Let me synthesize both documents and create a definitive spec.
+
+## Finalized Product Specification
+
+### Core Concept
+**GitHub → Portfolio → Share** in under 60 seconds. Opinionated, zero-design-decisions portfolio generator for developers.
+
+### Target Users (V1)
+- Junior/early-career developers in Uzbekistan/CIS
+- Bootcamp grads, students, self-taught devs
+- People with projects but no clean online presence
+
+### The Happy Path
+1. Sign in with GitHub
+2. Import repositories (auto-fetch pinned + top-starred)
+3. Select/edit projects (add live demo links, reorder)
+4. Choose a theme (3-4 presets)
+5. Click Generate
+6. Get `username.devfolio.uz`
+
+### MVP Features
+- **Auth:** GitHub OAuth only
+- **Import:** Fetch repos, auto-detect tech stack, filter forks
+- **Editor:** Toggle project visibility, edit descriptions, add deployment links, social links
+- **Themes:** 3 presets (Minimal, Bento Grid, Terminal Dark)
+- **Output:** Static portfolio on subdomain, mobile-friendly, SEO-ready
+- **Stealth Analytics:** Page views, clicks, geo-location (collected but not shown yet)
+
+### Tech Stack
+- **Frontend:** Next.js 14+ (App Router), Tailwind, shadcn/ui
+- **Backend:** Supabase (Auth + PostgreSQL)
+- **Hosting:** Vercel
+- **Analytics:** Custom lightweight tracker (own your data)
+
+### Monetization (Later)
+- Custom domains
+- Unlock analytics dashboard
+- Premium themes
+- Resume PDF export
+
+---
+
+Now let me generate a comprehensive technical prompt:Here's your finalized technical specification. Key decisions I made synthesizing both documents:
+
+**What I kept from both:**
+- Core happy path (GitHub → Select → Theme → Publish)
+- Stealth analytics strategy (collect now, monetize later)
+- Supabase + Next.js stack
+- 3 theme approach
+- Subdomain strategy
+
+**What I clarified/added:**
+- Complete database schema with proper RLS policies
+- Full project structure with file organization
+- Actual TypeScript code for critical components (GitHub fetcher, analytics tracker, middleware)
+- Theme component architecture
+- Proper subdomain routing logic for Vercel
+- 4-week milestone breakdown
+- Ready-to-copy setup commands
