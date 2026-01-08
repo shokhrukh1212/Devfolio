@@ -2,14 +2,13 @@
 
 import { useTransition } from "react";
 import { useLocale } from "next-intl";
-import { Globe } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { setLocaleCookie } from "@/lib/actions/locale";
 import { cn } from "@/lib/utils";
 
@@ -43,36 +42,86 @@ export function LanguageSelector({ variant = "default" }: LanguageSelectorProps)
     return String.fromCodePoint(...codePoints);
   };
 
+  if (variant === "sidebar") {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            disabled={isPending}
+            className={cn(
+              "w-full h-10 px-3 flex items-center justify-between",
+              "bg-background border border-border rounded-lg",
+              "text-sm font-medium transition-colors",
+              "hover:bg-accent hover:border-accent",
+              "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+              "disabled:opacity-50 disabled:pointer-events-none"
+            )}
+          >
+            <span className="flex items-center gap-2">
+              {currentLanguage && (
+                <>
+                  <span className="text-base">{getFlagEmoji(currentLanguage.flag)}</span>
+                  <span>{currentLanguage.label}</span>
+                </>
+              )}
+            </span>
+            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-[var(--radix-dropdown-menu-trigger-width)]">
+          {languages.map((language) => (
+            <DropdownMenuItem
+              key={language.code}
+              onClick={() => handleLanguageChange(language.code)}
+              className={cn(
+                "cursor-pointer gap-2",
+                locale === language.code && "bg-accent"
+              )}
+            >
+              <span className="text-base">{getFlagEmoji(language.flag)}</span>
+              <span>{language.label}</span>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
+        <button
           disabled={isPending}
           className={cn(
-            variant === "sidebar" && "w-full justify-start"
+            "h-9 px-3 flex items-center gap-2",
+            "bg-background border border-border rounded-lg",
+            "text-sm font-medium transition-colors",
+            "hover:bg-accent hover:border-accent",
+            "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+            "disabled:opacity-50 disabled:pointer-events-none"
           )}
         >
-          <Globe className="h-4 w-4 mr-2" />
           {currentLanguage && (
             <>
-              {getFlagEmoji(currentLanguage.flag)} {currentLanguage.label}
+              <span className="text-base">{getFlagEmoji(currentLanguage.flag)}</span>
+              <span>{currentLanguage.label}</span>
             </>
           )}
-        </Button>
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+        </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align={variant === "sidebar" ? "start" : "end"}>
+      <DropdownMenuContent align="end">
         {languages.map((language) => (
           <DropdownMenuItem
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}
             className={cn(
-              "cursor-pointer",
+              "cursor-pointer gap-2",
               locale === language.code && "bg-accent"
             )}
           >
-            {getFlagEmoji(language.flag)} {language.label}
+            <span className="text-base">{getFlagEmoji(language.flag)}</span>
+            <span>{language.label}</span>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

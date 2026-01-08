@@ -5,15 +5,16 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import {
@@ -35,6 +36,7 @@ import {
   Trash2,
   GitFork,
   Loader2,
+  Pencil,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -43,14 +45,15 @@ import type { Project } from "@/types";
 interface ProjectsContentProps {
   initialProjects: Project[];
   userId: string;
+  githubUsername: string;
 }
 
-export function ProjectsContent({ initialProjects, userId }: ProjectsContentProps) {
+export function ProjectsContent({ initialProjects, userId, githubUsername }: ProjectsContentProps) {
   const [projects, setProjects] = useState<Project[]>(initialProjects);
   const [search, setSearch] = useState("");
-  const [syncOpen, setSyncOpen] = useState(false);
   const [syncing, setSyncing] = useState(false);
-  const [githubUsername, setGithubUsername] = useState("");
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [editForm, setEditForm] = useState({ title: "", description: "", demo_url: "" });
   const supabase = createClient();
   const t = useTranslations("projects");
   const tCommon = useTranslations("common");
@@ -92,13 +95,16 @@ export function ProjectsContent({ initialProjects, userId }: ProjectsContentProp
   };
 
   const handleSync = async () => {
-    if (!githubUsername) return;
+    if (!githubUsername) {
+      toast.error(tToast("syncFailed"));
+      return;
+    }
 
     setSyncing(true);
     try {
-      // Fetch repos from GitHub API
+      // Fetch repos from GitHub API using stored username
       const response = await fetch(
-        `https://api.github.com/users/${githubUsername}/repos?sort=stars&per_page=20`
+        `https://api.github.com/users/${githubUsername}/repos?sort=stars&per_page=30`
       );
 
       if (!response.ok) {
@@ -110,7 +116,7 @@ export function ProjectsContent({ initialProjects, userId }: ProjectsContentProp
       // Filter out forks and map to project format
       const newProjects = repos
         .filter((repo: { fork: boolean }) => !repo.fork)
-        .slice(0, 10)
+        .slice(0, 15)
         .map((repo: {
           id: number;
           name: string;
@@ -137,7 +143,7 @@ export function ProjectsContent({ initialProjects, userId }: ProjectsContentProp
         }));
 
       // Upsert projects
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("projects")
         .upsert(newProjects, {
           onConflict: "github_repo_id",
@@ -159,14 +165,49 @@ export function ProjectsContent({ initialProjects, userId }: ProjectsContentProp
       }
 
       toast.success(tToast("syncSuccess", { count: newProjects.length }));
-      setSyncOpen(false);
-      setGithubUsername("");
     } catch (error) {
       toast.error(tToast("syncFailed"));
       console.error(error);
     } finally {
       setSyncing(false);
     }
+  };
+
+  const handleEditProject = (project: Project) => {
+    setEditingProject(project);
+    setEditForm({
+      title: project.title,
+      description: project.description || "",
+      demo_url: project.demo_url || "",
+    });
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingProject) return;
+
+    const { error } = await supabase
+      .from("projects")
+      .update({
+        title: editForm.title,
+        description: editForm.description || null,
+        demo_url: editForm.demo_url || null,
+      })
+      .eq("id", editingProject.id);
+
+    if (error) {
+      toast.error(tToast("projectUpdateFailed"));
+      return;
+    }
+
+    setProjects((prev) =>
+      prev.map((p) =>
+        p.id === editingProject.id
+          ? { ...p, title: editForm.title, description: editForm.description || null, demo_url: editForm.demo_url || null }
+          : p
+      )
+    );
+    toast.success(tToast("projectUpdated"));
+    setEditingProject(null);
   };
 
   return (
@@ -178,9 +219,13 @@ export function ProjectsContent({ initialProjects, userId }: ProjectsContentProp
             {t("description")}
           </p>
         </div>
-        <Button onClick={() => setSyncOpen(true)}>
-          <RefreshCw className="w-4 h-4 mr-2" />
-          {t("syncFromGithub")}
+        <Button onClick={handleSync} disabled={syncing}>
+          {syncing ? (
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+          ) : (
+            <RefreshCw className="w-4 h-4 mr-2" />
+          )}
+          {syncing ? t("sync.syncing") : t("syncFromGithub")}
         </Button>
       </div>
 
@@ -203,7 +248,14 @@ export function ProjectsContent({ initialProjects, userId }: ProjectsContentProp
           <p className="text-muted-foreground mb-6">
             {t("syncToGetStarted")}
           </p>
-          <Button onClick={() => setSyncOpen(true)}>{t("syncProjects")}</Button>
+          <Button onClick={handleSync} disabled={syncing}>
+            {syncing ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <RefreshCw className="w-4 h-4 mr-2" />
+            )}
+            {syncing ? t("sync.syncing") : t("syncProjects")}
+          </Button>
         </div>
       ) : (
         <div className="grid gap-4">
@@ -217,6 +269,14 @@ export function ProjectsContent({ initialProjects, userId }: ProjectsContentProp
                   <div className="flex-1 space-y-3">
                     <div className="flex items-center gap-3">
                       <h3 className="text-lg font-bold">{project.title}</h3>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
+                        onClick={() => handleEditProject(project)}
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </Button>
                       <Badge
                         variant="secondary"
                         className="font-normal text-muted-foreground"
@@ -341,46 +401,53 @@ export function ProjectsContent({ initialProjects, userId }: ProjectsContentProp
         </div>
       )}
 
-      {/* Sync Dialog */}
-      <Dialog open={syncOpen} onOpenChange={setSyncOpen}>
+      {/* Edit Project Dialog */}
+      <Dialog open={!!editingProject} onOpenChange={(open) => !open && setEditingProject(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{t("sync.title")}</DialogTitle>
+            <DialogTitle>{t("edit.title")}</DialogTitle>
             <DialogDescription>
-              {t("sync.description")}
+              {t("edit.description")}
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="username">{t("sync.usernameLabel")}</Label>
+              <Label htmlFor="title">{t("edit.projectTitle")}</Label>
               <Input
-                id="username"
-                placeholder={t("sync.usernamePlaceholder")}
-                value={githubUsername}
-                onChange={(e) => setGithubUsername(e.target.value)}
+                id="title"
+                value={editForm.title}
+                onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="description">{t("edit.projectDescription")}</Label>
+              <Textarea
+                id="description"
+                value={editForm.description}
+                onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                className="resize-none min-h-[100px]"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="demo_url">{t("edit.demoUrl")}</Label>
+              <Input
+                id="demo_url"
+                placeholder="https://..."
+                value={editForm.demo_url}
+                onChange={(e) => setEditForm({ ...editForm, demo_url: e.target.value })}
               />
             </div>
           </div>
 
-          <div className="flex justify-end gap-3">
-            <Button variant="outline" onClick={() => setSyncOpen(false)}>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingProject(null)}>
               {tCommon("cancel")}
             </Button>
-            <Button onClick={handleSync} disabled={syncing || !githubUsername}>
-              {syncing ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("sync.syncing")}
-                </>
-              ) : (
-                <>
-                  <Github className="mr-2 h-4 w-4" />
-                  {t("syncProjects")}
-                </>
-              )}
+            <Button onClick={handleSaveEdit}>
+              {tCommon("save")}
             </Button>
-          </div>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

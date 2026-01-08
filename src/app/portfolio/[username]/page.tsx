@@ -7,6 +7,7 @@ import { TerminalTheme } from "@/components/portfolio/themes/terminal-theme";
 
 interface PortfolioPageProps {
   params: Promise<{ username: string }>;
+  searchParams: Promise<{ preview?: string }>;
 }
 
 export async function generateMetadata({
@@ -39,8 +40,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function PortfolioPage({ params }: PortfolioPageProps) {
+export default async function PortfolioPage({ params, searchParams }: PortfolioPageProps) {
   const { username } = await params;
+  const { preview } = await searchParams;
   const supabase = await createClient();
 
   // Fetch profile
@@ -63,14 +65,23 @@ export default async function PortfolioPage({ params }: PortfolioPageProps) {
     .eq("is_visible", true)
     .order("display_order", { ascending: true });
 
-  // Track page view (fire and forget)
-  supabase
-    .from("analytics_events")
-    .insert({
-      profile_id: profile.id,
-      event_type: "page_view",
-    })
-    .then(() => {});
+  // Self-View Guard: Don't track if preview mode or owner is viewing
+  const isPreviewMode = preview === "true";
+
+  // Get current user session to check if owner is viewing
+  const { data: { user } } = await supabase.auth.getUser();
+  const isOwnerViewing = user?.id === profile.id;
+
+  // Only track if NOT preview mode AND NOT owner viewing
+  if (!isPreviewMode && !isOwnerViewing) {
+    supabase
+      .from("analytics_events")
+      .insert({
+        profile_id: profile.id,
+        event_type: "page_view",
+      })
+      .then(() => {});
+  }
 
   // Render the appropriate theme
   const themeProps = { profile, projects: projects || [] };

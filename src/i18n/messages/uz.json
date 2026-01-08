@@ -59,6 +59,7 @@
       "profile": "Profil",
       "theme": "Mavzu",
       "viewPortfolio": "Portfolioni ko'rish",
+      "manageAccount": "Hisobni boshqarish",
       "signOut": "Chiqish"
     },
     "overview": {
@@ -72,7 +73,14 @@
       "profileViews": "Profil ko'rishlar",
       "lastDays": "Oxirgi 7 kun",
       "visitorActivity": "Tashrif buyuruvchilar faoliyati",
-      "viewsOverDays": "Oxirgi 7 kundagi ko'rishlar"
+      "viewsOverDays": "Oxirgi 7 kundagi ko'rishlar",
+      "shareYourPortfolio": "Portfolioingizni ulashing",
+      "copyLink": "Havolani nusxalash",
+      "copied": "Nusxalandi!",
+      "comingSoonPro": "Tez orada Pro da",
+      "proFeatureDescription": "Pro bilan batafsil tahlilni oching",
+      "topLocations": "Tashrif buyuruvchilar joylashuvi",
+      "topLocationsDescription": "Tashrif buyuruvchilaringiz qayerdan kelmoqda"
     },
     "days": {
       "sun": "Yak",
@@ -108,6 +116,13 @@
       "usernameLabel": "GitHub foydalanuvchi nomi",
       "usernamePlaceholder": "masalan, torvalds",
       "syncing": "Sinxronlanmoqda..."
+    },
+    "edit": {
+      "title": "Loyihani tahrirlash",
+      "description": "Ushbu loyiha portfolioingizda qanday ko'rinishini sozlang.",
+      "projectTitle": "Loyiha nomi",
+      "projectDescription": "Tavsif",
+      "demoUrl": "Demo URL"
     }
   },
   "settings": {
@@ -119,6 +134,7 @@
       "publishLabel": "Portfolioni nashr qilish",
       "publishDescription": "Yoqilganda, portfolioingiz quyidagi manzilda ko'rinadi"
     },
+    "copyUrl": "URL nusxalash",
     "basicInfo": {
       "title": "Asosiy ma'lumotlar",
       "description": "O'zingiz va nimalar qilishingiz haqida gapirib bering.",
@@ -149,9 +165,10 @@
     "title": "Mavzu tanlash",
     "description": "Portfolioingiz dunyoga qanday ko'rinishini tanlang. O'zgarishlar darhol qo'llaniladi.",
     "preview": {
-      "title": "Portfolioingizni ko'rib chiqing",
+      "title": "Jonli ko'rish",
       "description": "Tanlangan mavzu haqiqiy ma'lumotlaringiz bilan qanday ko'rinishini ko'ring.",
-      "viewLive": "Jonli portfolioni ko'rish"
+      "viewLive": "Yangi oynada ochish",
+      "refresh": "Yangilash"
     },
     "themes": {
       "minimal": {
@@ -178,11 +195,13 @@
     "themeChanged": "Mavzu {theme} ga o'zgartirildi",
     "themeChangeFailed": "Mavzuni yangilashda xatolik",
     "syncSuccess": "GitHub dan {count} ta loyiha sinxronlandi",
-    "syncFailed": "Loyihalarni sinxronlashda xatolik"
+    "syncFailed": "Loyihalarni sinxronlashda xatolik",
+    "urlCopied": "Portfolio URL nusxalandi",
+    "copyFailed": "URL ni nusxalashda xatolik"
   },
   "theme": {
-    "light": "Yorug' rejim",
-    "dark": "Qorong'i rejim",
+    "light": "Yorug'",
+    "dark": "Qorong'i",
     "system": "Tizim"
   },
   "language": {

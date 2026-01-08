@@ -1004,6 +1004,78 @@ When implementing this project:
 
 ---
 
+## MVP V2 - UX Improvements
+
+### Auto-Sync GitHub Repos
+- [x] Removed GitHub username input dialog
+- [x] "Sync from GitHub" now auto-fetches using stored profile username
+- [x] No more friction or typos - one-click sync
+
+### Project Edit Modal
+- [x] Pencil/edit icon next to each project title
+- [x] Modal to override: Title, Description, Demo URL
+- [x] Example: Rename `backend-v2` to "E-commerce Microservices Architecture"
+
+### Copy to Clipboard
+- [x] Dashboard overview: Share card with portfolio URL + copy button
+- [x] Settings page: Copy icon next to `username.devfolio.uz`
+- [x] Toast notification on successful copy
+
+### Pro Feature Teaser
+- [x] "Top Visitor Locations" card with blur overlay
+- [x] Lock icon + "Coming soon in Pro" badge
+- [x] Sets stage for future monetization
+
+### Live Theme Preview
+- [x] Replaced gray placeholder with actual iframe preview
+- [x] Browser-style frame with traffic light buttons
+- [x] Refresh button to reload preview after theme change
+- [x] "Open in New Tab" button for full view
+
+### Segmented Theme Toggle
+- [x] Full-width pill tabs: `[ Light | Dark ]`
+- [x] Sliding background animation on switch
+- [x] Hardcoded "Light"/"Dark" labels (not translated)
+- [x] Matches height with language selector (h-10)
+
+### Language Selector Redesign
+- [x] Bordered dropdown style (not ghost button)
+- [x] ChevronDown icon on the right
+- [x] Flag emoji + language name
+- [x] Full width in sidebar, consistent h-10 height
+
+### User Profile Dropdown
+- [x] Moved logout from footer to profile section
+- [x] Clickable profile block with chevron icon
+- [x] Dropdown menu with:
+  - "Manage Account" → links to Settings
+  - "Sign Out" → red text styling
+
+### Analytics Self-View Guard
+- [x] **Preview Mode**: Dashboard iframe uses `?preview=true`
+- [x] **Session Check**: Compares visitor ID with portfolio owner ID
+- [x] Owner views (logged in or preview) don't inflate analytics
+- [x] Prevents "polluted data" from self-refreshing
+
+### Sidebar Visual Hierarchy
+```
++---------------------------------------+
+| [Avatar] Name               ⌄        |  ← Profile dropdown
+|         @username                     |
++---------------------------------------+
+| Overview                              |
+| Projects                              |
+| Profile                               |
+| Theme                                 |
++---------------------------------------+
+| [ 🇺🇿 O'zbekcha              ⌄ ]      |  ← Bordered dropdown
+| [ ☀ Light    |    🌙 Dark    ]      |  ← Segmented control
+| [ 🚀 View Portfolio           ]      |  ← Primary button
++---------------------------------------+
+```
+
+---
+
 ## App Routes
 
 ```
