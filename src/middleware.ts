@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { createServerClient } from "@supabase/ssr";
 import { updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
@@ -13,6 +14,7 @@ export async function middleware(request: NextRequest) {
 
   const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "devfolio.uz";
   const isLocalhost = hostname.includes("localhost");
+  const isBaseDomain = hostname === baseDomain || hostname === `www.${baseDomain}`;
 
   let subdomain: string | null = null;
 
@@ -36,6 +38,39 @@ export async function middleware(request: NextRequest) {
   if (subdomain) {
     url.pathname = `/portfolio/${subdomain}${url.pathname === "/" ? "" : url.pathname}`;
     return NextResponse.rewrite(url);
+  }
+
+  // Custom domain routing (future feature)
+  // If NOT base domain AND NOT subdomain AND NOT localhost, check for custom domain
+  if (!isLocalhost && !isBaseDomain && !subdomain && !hostname.includes(baseDomain)) {
+    // Create a Supabase client for the lookup
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll() {
+            // No-op for lookup only
+          },
+        },
+      }
+    );
+
+    // Look up the custom domain in the database
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("username")
+      .eq("custom_domain", hostname)
+      .eq("custom_domain_verified", true)
+      .single();
+
+    if (profile?.username) {
+      url.pathname = `/portfolio/${profile.username}${url.pathname === "/" ? "" : url.pathname}`;
+      return NextResponse.rewrite(url);
+    }
   }
 
   // Update session for all requests

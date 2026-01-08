@@ -1,3 +1,16 @@
+// Waitlist interests stored in profile.custom_data
+export interface WaitlistInterests {
+  analytics?: boolean;
+  custom_domain?: boolean;
+  requested_domain?: string;
+  joined_at?: string;
+}
+
+// Custom data stored in profile
+export interface ProfileCustomData {
+  waitlist_interests?: WaitlistInterests;
+}
+
 // Profile type
 export interface Profile {
   id: string;
@@ -14,6 +27,9 @@ export interface Profile {
   website_url: string | null;
   theme: "minimal" | "bento" | "terminal";
   is_published: boolean;
+  custom_data: ProfileCustomData | null;
+  custom_domain: string | null;
+  custom_domain_verified: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -40,14 +56,37 @@ export interface Project {
   updated_at: string;
 }
 
+// Analytics event types
+export type AnalyticsEventType =
+  | "page_view"
+  | "project_click"
+  | "github_click"
+  | "demo_click"
+  | "social_click"
+  | "resume_download"
+  | "project_interaction"
+  | "filter_click";
+
+// Analytics event metadata
+export interface AnalyticsMetadata {
+  referrer_type?: "linkedin" | "greenhouse" | "lever" | "workday" | "telegram" | "direct" | "other";
+  duration_seconds?: number;
+  project_title?: string;
+  button_location?: string;
+  [key: string]: string | number | boolean | undefined;
+}
+
 // Analytics event type
 export interface AnalyticsEvent {
   id: number;
   profile_id: string;
-  event_type: "page_view" | "project_click" | "github_click" | "demo_click" | "social_click";
+  visitor_session_id: string | null;
+  event_type: AnalyticsEventType;
   project_id: string | null;
+  metadata: AnalyticsMetadata | null;
   visitor_country: string | null;
   visitor_city: string | null;
+  geo_country: string | null;
   referrer: string | null;
   user_agent: string | null;
   created_at: string;
@@ -74,4 +113,7 @@ export type ThemeName = "minimal" | "bento" | "terminal";
 export interface ThemeProps {
   profile: Profile;
   projects: Project[];
+  isOwner?: boolean;
+  isPreview?: boolean;
+  geoCountry?: string | null;
 }

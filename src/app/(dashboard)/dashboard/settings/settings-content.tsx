@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -25,7 +25,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader2, Copy, Check } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Loader2, Copy, Check, Globe, Rocket } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import type { Profile } from "@/types";
@@ -52,6 +60,12 @@ interface SettingsContentProps {
 export function SettingsContent({ profile }: SettingsContentProps) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [customDomain, setCustomDomain] = useState("");
+  const [showDomainModal, setShowDomainModal] = useState(false);
+  const [domainWaitlistJoined, setDomainWaitlistJoined] = useState(
+    profile?.custom_data?.waitlist_interests?.custom_domain || false
+  );
+  const [isJoiningWaitlist, setIsJoiningWaitlist] = useState(false);
   const supabase = createClient();
   const t = useTranslations("settings");
   const tCommon = useTranslations("common");
@@ -67,6 +81,35 @@ export function SettingsContent({ profile }: SettingsContentProps) {
       setTimeout(() => setCopied(false), 2000);
     } catch {
       toast.error(tToast("copyFailed"));
+    }
+  };
+
+  const handleConnectDomain = () => {
+    if (!customDomain.trim()) return;
+    setShowDomainModal(true);
+  };
+
+  const handleJoinDomainWaitlist = async () => {
+    if (!profile?.id) return;
+    setIsJoiningWaitlist(true);
+    try {
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          feature: "custom_domain",
+          userId: profile.id,
+          metadata: { requested_domain: customDomain },
+        }),
+      });
+
+      if (response.ok) {
+        setDomainWaitlistJoined(true);
+      }
+    } catch (error) {
+      console.error("Failed to join waitlist:", error);
+    } finally {
+      setIsJoiningWaitlist(false);
     }
   };
 
@@ -337,6 +380,67 @@ export function SettingsContent({ profile }: SettingsContentProps) {
           </div>
         </form>
       </Form>
+
+      {/* Custom Domain Section (outside the form) */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Globe className="h-5 w-5" />
+            {t("customDomain.title")}
+          </CardTitle>
+          <CardDescription>
+            {t("customDomain.description")}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-3">
+            <Input
+              placeholder={t("customDomain.placeholder")}
+              value={customDomain}
+              onChange={(e) => setCustomDomain(e.target.value)}
+              className="flex-1"
+            />
+            <Button onClick={handleConnectDomain} disabled={!customDomain.trim()}>
+              {t("customDomain.connect")}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Custom Domain Coming Soon Modal */}
+      <Dialog open={showDomainModal} onOpenChange={setShowDomainModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex items-center gap-2 text-2xl mb-2">
+              <Rocket className="h-6 w-6 text-primary" />
+            </div>
+            <DialogTitle>{t("customDomain.comingSoon.title")}</DialogTitle>
+            <DialogDescription className="pt-2">
+              {t("customDomain.comingSoon.description")}
+            </DialogDescription>
+          </DialogHeader>
+
+          {domainWaitlistJoined ? (
+            <div className="flex items-center justify-center gap-2 py-4 text-primary font-medium">
+              <div className="bg-primary/10 p-1.5 rounded-full">
+                <Check className="h-4 w-4" />
+              </div>
+              {t("customDomain.comingSoon.success")}
+            </div>
+          ) : (
+            <DialogFooter className="sm:justify-center pt-4">
+              <Button
+                onClick={handleJoinDomainWaitlist}
+                disabled={isJoiningWaitlist}
+                className="w-full sm:w-auto"
+              >
+                {isJoiningWaitlist && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {t("customDomain.comingSoon.notify")}
+              </Button>
+            </DialogFooter>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

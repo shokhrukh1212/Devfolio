@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Github,
@@ -11,9 +12,29 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAnalytics } from "@/hooks/use-analytics";
 import type { ThemeProps } from "@/types";
 
-export function BentoTheme({ profile, projects }: ThemeProps) {
+export function BentoTheme({ profile, projects, isOwner, isPreview, geoCountry }: ThemeProps) {
+  // Analytics tracking
+  const {
+    trackPageView,
+    trackGitHubClick,
+    trackDemoClick,
+    trackSocialClick,
+    startProjectInteraction,
+  } = useAnalytics({
+    profileId: profile.id,
+    isOwner,
+    isPreview,
+    geoCountry,
+  });
+
+  // Track page view on mount
+  useEffect(() => {
+    trackPageView();
+  }, [trackPageView]);
+
   const visibleProjects = projects
     .filter((p) => p.is_visible)
     .sort((a, b) => a.display_order - b.display_order);
@@ -60,6 +81,7 @@ export function BentoTheme({ profile, projects }: ThemeProps) {
                     href={profile.website_url}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={() => trackSocialClick("website")}
                     className="inline-flex items-center px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-sm font-medium hover:bg-indigo-100 transition-colors"
                   >
                     <Globe className="w-3 h-3 mr-2" />
@@ -84,6 +106,7 @@ export function BentoTheme({ profile, projects }: ThemeProps) {
                   href={profile.github_url}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => trackSocialClick("github")}
                   className="flex items-center justify-between p-4 rounded-xl bg-white/10 hover:bg-white/20 transition-colors"
                 >
                   <span className="font-medium flex items-center gap-2">
@@ -97,6 +120,7 @@ export function BentoTheme({ profile, projects }: ThemeProps) {
                   href={profile.linkedin_url}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => trackSocialClick("linkedin")}
                   className="flex items-center justify-between p-4 rounded-xl bg-[#0077b5]/20 hover:bg-[#0077b5]/30 transition-colors"
                 >
                   <span className="font-medium flex items-center gap-2">
@@ -120,6 +144,15 @@ export function BentoTheme({ profile, projects }: ThemeProps) {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 + i * 0.05 }}
+              onClick={() => {
+                // Track as demo click if demo_url exists, otherwise github click
+                if (project.demo_url) {
+                  trackDemoClick(project.id, project.title);
+                } else if (project.github_url) {
+                  trackGitHubClick(project.id, project.title);
+                }
+                startProjectInteraction(project.id, project.title);
+              }}
               className={cn(
                 "group bg-white rounded-3xl p-6 border border-zinc-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 flex flex-col justify-between",
                 project.is_featured
