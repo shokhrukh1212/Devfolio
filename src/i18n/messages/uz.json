@@ -80,7 +80,11 @@
       "comingSoonPro": "Tez orada Pro da",
       "proFeatureDescription": "Pro bilan batafsil tahlilni oching",
       "topLocations": "Tashrif buyuruvchilar joylashuvi",
-      "topLocationsDescription": "Tashrif buyuruvchilaringiz qayerdan kelmoqda"
+      "topLocationsDescription": "Tashrif buyuruvchilaringiz qayerdan kelmoqda",
+      "topSources": "Trafik manbalari",
+      "topSourcesDescription": "Tashrif buyuruvchilaringiz qayerdan kelgan",
+      "unlockData": "Ma'lumotlarni ochish",
+      "onWaitlist": "Siz kutish ro'yxatidasiz!"
     },
     "days": {
       "sun": "Yak",
@@ -159,6 +163,18 @@
       "websitePlaceholder": "https://...",
       "twitter": "Twitter / X URL",
       "twitterPlaceholder": "https://x.com/..."
+    },
+    "customDomain": {
+      "title": "Maxsus domen",
+      "description": "O'z domeningizni portfolioga ulang.",
+      "placeholder": "www.sizningdomen.com",
+      "connect": "Ulash",
+      "comingSoon": {
+        "title": "Maxsus domenlar tez orada!",
+        "description": "Biz DNS infratuzilmasini yakunlamoqdamiz. Erta kirish uchun xabarnoma olishni xohlaysizmi?",
+        "notify": "Menga xabar bering",
+        "success": "Siz ro'yxatdasiz! Xabar beramiz."
+      }
     }
   },
   "themeSelection": {

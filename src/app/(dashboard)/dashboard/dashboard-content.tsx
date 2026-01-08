@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Eye, FolderGit2, Star, Share2, Lock, MapPin, Copy, Check } from "lucide-react";
+import { LockedCard } from "@/components/ui/locked-card";
+import { ArrowRight, Eye, FolderGit2, Star, Share2, MapPin, Link2, Copy, Check } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -179,29 +180,27 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
         </CardContent>
       </Card>
 
-      {/* Coming Soon - Pro Feature */}
-      <Card className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-background/80 to-background/95 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-full border border-primary/20 mb-2">
-            <Lock className="h-3.5 w-3.5 text-primary" />
-            <span className="text-xs font-medium text-primary">{t("comingSoonPro")}</span>
-          </div>
-          <p className="text-sm text-muted-foreground">{t("proFeatureDescription")}</p>
-        </div>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MapPin className="h-5 w-5" />
-            {t("topLocations")}
-          </CardTitle>
-          <CardDescription>{t("topLocationsDescription")}</CardDescription>
-        </CardHeader>
-        <CardContent>
+      {/* Pro Features - Locked Analytics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Top Locations */}
+        <LockedCard
+          title={t("topLocations")}
+          description={t("topLocationsDescription")}
+          featureKey="analytics"
+          userId={profile?.id || ""}
+          initialJoined={profile?.custom_data?.waitlist_interests?.analytics || false}
+          unlockButtonText={t("unlockData")}
+          joinedText={t("onWaitlist")}
+        >
           <div className="space-y-3">
             {["United States", "Germany", "India", "United Kingdom", "Canada"].map((country, i) => (
               <div key={country} className="flex items-center justify-between">
-                <span className="text-sm">{country}</span>
                 <div className="flex items-center gap-2">
-                  <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
+                  <MapPin className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">{country}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-20 h-2 bg-muted rounded-full overflow-hidden">
                     <div
                       className="h-full bg-primary/40 rounded-full"
                       style={{ width: `${100 - i * 20}%` }}
@@ -212,8 +211,44 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
               </div>
             ))}
           </div>
-        </CardContent>
-      </Card>
+        </LockedCard>
+
+        {/* Top Sources */}
+        <LockedCard
+          title={t("topSources")}
+          description={t("topSourcesDescription")}
+          featureKey="analytics"
+          userId={profile?.id || ""}
+          initialJoined={profile?.custom_data?.waitlist_interests?.analytics || false}
+          unlockButtonText={t("unlockData")}
+          joinedText={t("onWaitlist")}
+        >
+          <div className="space-y-3">
+            {[
+              { name: "LinkedIn", icon: "🔗", percent: 45 },
+              { name: "Direct", icon: "🌐", percent: 30 },
+              { name: "Telegram", icon: "📨", percent: 15 },
+              { name: "Other", icon: "📊", percent: 10 },
+            ].map((source) => (
+              <div key={source.name} className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span>{source.icon}</span>
+                  <span className="text-sm">{source.name}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-20 h-2 bg-muted rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-primary/40 rounded-full"
+                      style={{ width: `${source.percent}%` }}
+                    />
+                  </div>
+                  <span className="text-xs text-muted-foreground w-8">{source.percent}%</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </LockedCard>
+      </div>
     </div>
   );
 }

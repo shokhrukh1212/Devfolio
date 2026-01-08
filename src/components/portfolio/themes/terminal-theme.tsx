@@ -2,11 +2,30 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useAnalytics } from "@/hooks/use-analytics";
 import type { ThemeProps } from "@/types";
 
-export function TerminalTheme({ profile, projects }: ThemeProps) {
+export function TerminalTheme({ profile, projects, isOwner, isPreview, geoCountry }: ThemeProps) {
   const [typedText, setTypedText] = useState("");
   const fullText = `> Initializing profile for ${profile.username}...\n> Loading modules... DONE\n> Rendering bio...`;
+
+  // Analytics tracking
+  const {
+    trackPageView,
+    trackGitHubClick,
+    trackDemoClick,
+    trackSocialClick,
+  } = useAnalytics({
+    profileId: profile.id,
+    isOwner,
+    isPreview,
+    geoCountry,
+  });
+
+  // Track page view on mount
+  useEffect(() => {
+    trackPageView();
+  }, [trackPageView]);
 
   useEffect(() => {
     let i = 0;
@@ -62,6 +81,7 @@ export function TerminalTheme({ profile, projects }: ThemeProps) {
                     href={profile.github_url}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={() => trackSocialClick("github")}
                     className="text-[#58a6ff] hover:underline underline-offset-4"
                   >
                     github_url: &quot;{profile.github_url}&quot;
@@ -72,6 +92,7 @@ export function TerminalTheme({ profile, projects }: ThemeProps) {
                     href={profile.twitter_url}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={() => trackSocialClick("twitter")}
                     className="text-[#58a6ff] hover:underline underline-offset-4"
                   >
                     twitter_url: &quot;{profile.twitter_url}&quot;
@@ -132,6 +153,7 @@ export function TerminalTheme({ profile, projects }: ThemeProps) {
                         href={project.demo_url}
                         target="_blank"
                         rel="noreferrer"
+                        onClick={() => trackDemoClick(project.id, project.title)}
                         className="text-[#2ea043] hover:underline"
                       >
                         ./view-demo.sh
@@ -142,6 +164,7 @@ export function TerminalTheme({ profile, projects }: ThemeProps) {
                         href={project.github_url}
                         target="_blank"
                         rel="noreferrer"
+                        onClick={() => trackGitHubClick(project.id, project.title)}
                         className="text-[#d2a8ff] hover:underline"
                       >
                         ./view-source.sh

@@ -80,7 +80,11 @@
       "comingSoonPro": "Coming soon in Pro",
       "proFeatureDescription": "Unlock detailed analytics with Pro",
       "topLocations": "Top Visitor Locations",
-      "topLocationsDescription": "Where your visitors are coming from"
+      "topLocationsDescription": "Where your visitors are coming from",
+      "topSources": "Top Traffic Sources",
+      "topSourcesDescription": "Where your visitors came from",
+      "unlockData": "Unlock Visitor Data",
+      "onWaitlist": "You're on the waitlist!"
     },
     "days": {
       "sun": "Sun",
@@ -159,6 +163,18 @@
       "websitePlaceholder": "https://...",
       "twitter": "Twitter / X URL",
       "twitterPlaceholder": "https://x.com/..."
+    },
+    "customDomain": {
+      "title": "Custom Domain",
+      "description": "Connect your own domain to your portfolio.",
+      "placeholder": "www.yourdomain.com",
+      "connect": "Connect Domain",
+      "comingSoon": {
+        "title": "Custom Domains Coming Soon!",
+        "description": "We're finalizing DNS infrastructure to let you connect your own domain. Want early access when it launches?",
+        "notify": "Notify Me When Ready",
+        "success": "You're on the list! We'll notify you."
+      }
     }
   },
   "themeSelection": {

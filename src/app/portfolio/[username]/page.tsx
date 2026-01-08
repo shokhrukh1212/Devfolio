@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { MinimalTheme } from "@/components/portfolio/themes/minimal-theme";
@@ -45,15 +46,34 @@ export default async function PortfolioPage({ params, searchParams }: PortfolioP
   const { preview } = await searchParams;
   const supabase = await createClient();
 
-  // Fetch profile
-  const { data: profile, error: profileError } = await supabase
+  // Get geo-location from Vercel headers
+  const headersList = await headers();
+  const geoCountry = headersList.get("x-vercel-ip-country") || null;
+
+  const isPreviewMode = preview === "true";
+
+  // Get current user session first (needed for owner preview check)
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // Fetch profile - if preview mode, allow unpublished portfolios for owner
+  let profileQuery = supabase
     .from("profiles")
     .select("*")
-    .eq("username", username)
-    .eq("is_published", true)
-    .single();
+    .eq("username", username);
+
+  // Only require is_published if NOT in preview mode
+  if (!isPreviewMode) {
+    profileQuery = profileQuery.eq("is_published", true);
+  }
+
+  const { data: profile, error: profileError } = await profileQuery.single();
 
   if (profileError || !profile) {
+    notFound();
+  }
+
+  // If preview mode but portfolio is unpublished, only allow the owner to view
+  if (isPreviewMode && !profile.is_published && user?.id !== profile.id) {
     notFound();
   }
 
@@ -66,25 +86,17 @@ export default async function PortfolioPage({ params, searchParams }: PortfolioP
     .order("display_order", { ascending: true });
 
   // Self-View Guard: Don't track if preview mode or owner is viewing
-  const isPreviewMode = preview === "true";
-
-  // Get current user session to check if owner is viewing
-  const { data: { user } } = await supabase.auth.getUser();
   const isOwnerViewing = user?.id === profile.id;
 
-  // Only track if NOT preview mode AND NOT owner viewing
-  if (!isPreviewMode && !isOwnerViewing) {
-    supabase
-      .from("analytics_events")
-      .insert({
-        profile_id: profile.id,
-        event_type: "page_view",
-      })
-      .then(() => {});
-  }
+  // Analytics props to pass to themes (tracking is handled client-side)
+  const analyticsProps = {
+    isOwner: isOwnerViewing,
+    isPreview: isPreviewMode,
+    geoCountry,
+  };
 
   // Render the appropriate theme
-  const themeProps = { profile, projects: projects || [] };
+  const themeProps = { profile, projects: projects || [], ...analyticsProps };
 
   switch (profile.theme) {
     case "bento":

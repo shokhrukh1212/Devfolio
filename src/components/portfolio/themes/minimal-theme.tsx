@@ -1,10 +1,29 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Github, Globe, Linkedin, Mail, MapPin } from "lucide-react";
+import { useAnalytics } from "@/hooks/use-analytics";
 import type { ThemeProps } from "@/types";
 
-export function MinimalTheme({ profile, projects }: ThemeProps) {
+export function MinimalTheme({ profile, projects, isOwner, isPreview, geoCountry }: ThemeProps) {
+  // Analytics tracking
+  const {
+    trackPageView,
+    trackGitHubClick,
+    trackDemoClick,
+    trackSocialClick,
+  } = useAnalytics({
+    profileId: profile.id,
+    isOwner,
+    isPreview,
+    geoCountry,
+  });
+
+  // Track page view on mount
+  useEffect(() => {
+    trackPageView();
+  }, [trackPageView]);
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -64,6 +83,7 @@ export function MinimalTheme({ profile, projects }: ThemeProps) {
                   href={profile.github_url}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => trackSocialClick("github")}
                   className="p-2 rounded-full hover:bg-zinc-100 transition-colors"
                 >
                   <Github className="w-5 h-5" />
@@ -74,6 +94,7 @@ export function MinimalTheme({ profile, projects }: ThemeProps) {
                   href={profile.linkedin_url}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => trackSocialClick("linkedin")}
                   className="p-2 rounded-full hover:bg-zinc-100 transition-colors"
                 >
                   <Linkedin className="w-5 h-5" />
@@ -84,6 +105,7 @@ export function MinimalTheme({ profile, projects }: ThemeProps) {
                   href={profile.website_url}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => trackSocialClick("website")}
                   className="p-2 rounded-full hover:bg-zinc-100 transition-colors"
                 >
                   <Globe className="w-5 h-5" />
@@ -92,6 +114,7 @@ export function MinimalTheme({ profile, projects }: ThemeProps) {
               {profile.email && (
                 <a
                   href={`mailto:${profile.email}`}
+                  onClick={() => trackSocialClick("email")}
                   className="p-2 rounded-full hover:bg-zinc-100 transition-colors"
                 >
                   <Mail className="w-5 h-5" />
@@ -124,6 +147,7 @@ export function MinimalTheme({ profile, projects }: ThemeProps) {
                           href={project.demo_url}
                           target="_blank"
                           rel="noreferrer"
+                          onClick={() => trackDemoClick(project.id, project.title)}
                           className="text-sm font-medium hover:text-zinc-500"
                         >
                           View Demo ↗
@@ -134,6 +158,7 @@ export function MinimalTheme({ profile, projects }: ThemeProps) {
                           href={project.github_url}
                           target="_blank"
                           rel="noreferrer"
+                          onClick={() => trackGitHubClick(project.id, project.title)}
                           className="text-sm font-medium hover:text-zinc-500"
                         >
                           Code ↗

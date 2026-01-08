@@ -1076,6 +1076,135 @@ When implementing this project:
 
 ---
 
+## MVP V3 - Stealth Analytics + Custom Domains Infrastructure
+
+### Block 1: Enhanced Analytics System
+
+**Database Schema Updates:**
+- [x] Added `visitor_session_id` (uuid) - tracks unique visitor sessions
+- [x] Added `metadata` (jsonb) - stores referrer_type, duration, project_title, etc.
+- [x] Added `geo_country` (text) - country from Vercel headers
+- [x] New event types: `resume_download`, `project_interaction`, `filter_click`
+- [x] CHECK constraint updated to include all 8 event types
+
+**Analytics Tracking Hook** (`src/hooks/use-analytics.ts`):
+- [x] Generates/retrieves `visitor_session_id` from localStorage
+- [x] Detects recruiter referrers (LinkedIn, Greenhouse, Lever, Workday, Telegram)
+- [x] Tracks: page_view, project_click, github_click, demo_click, social_click
+- [x] Privacy guard: skips tracking if owner is viewing or preview mode
+- [x] Project interaction timing (start/end duration tracking)
+
+**Geo-Location Capture:**
+- [x] Extracts `x-vercel-ip-country` header in portfolio page
+- [x] Passes to client via ThemeProps for analytics events
+
+**Theme Tracking Integration:**
+- [x] All 3 themes (minimal, bento, terminal) use `useAnalytics` hook
+- [x] Track page views on mount
+- [x] Track social link clicks (GitHub, LinkedIn, website, email, Twitter)
+- [x] Track project link clicks (Demo, Code/GitHub)
+
+### Block 2: Custom Domains Infrastructure
+
+**Database Updates:**
+- [x] Added `custom_data` (jsonb) - stores waitlist interests
+- [x] Added `custom_domain` (text, unique) - user's custom domain
+- [x] Added `custom_domain_verified` (boolean) - DNS verification status
+- [x] Index on `custom_domain` for fast lookups
+
+**Middleware Enhancement** (`src/middleware.ts`):
+- [x] Existing: Subdomain routing (`username.devfolio.uz` → `/portfolio/[username]`)
+- [x] New: Custom domain lookup (queries verified custom domains in database)
+- [x] Rewrites custom domain requests to portfolio page
+
+### Block 3: Analytics UI - Blur & Lock Pattern
+
+**LockedCard Component** (`src/components/ui/locked-card.tsx`):
+- [x] Blur effect over content (`blur-[6px]`)
+- [x] Semi-transparent overlay
+- [x] "Unlock" button in center
+- [x] One-click waitlist join (no email needed - user logged in)
+- [x] Success state: "You're on the waitlist!"
+
+**Dashboard Updates:**
+- [x] Two locked sections in 2-column grid:
+  - **Top Locations** - fake geo data with blur
+  - **Top Sources** - LinkedIn, Direct, Telegram, Other with blur
+- [x] Clicking "Unlock Visitor Data" joins analytics waitlist
+- [x] State persisted via `profiles.custom_data.waitlist_interests.analytics`
+
+**Waitlist API** (`src/app/api/waitlist/route.ts`):
+- [x] POST endpoint for joining waitlists
+- [x] Supports features: `analytics`, `custom_domain`
+- [x] Stores metadata (e.g., requested_domain)
+- [x] Updates `profiles.custom_data.waitlist_interests`
+
+### Block 4: Custom Domain UI - Fake Door Test
+
+**Settings Page Section:**
+- [x] Custom Domain card after Social Links
+- [x] Domain input field + "Connect Domain" button
+- [x] Looks fully functional until clicked
+
+**Coming Soon Modal:**
+- [x] Triggers when user clicks "Connect Domain"
+- [x] "Custom Domains Coming Soon!" title
+- [x] Description about DNS infrastructure
+- [x] "Notify Me When Ready" button
+- [x] Stores requested domain in `custom_data.waitlist_interests.requested_domain`
+- [x] Success state: "You're on the list!"
+
+### Database Query for Launch Day Email:
+```sql
+-- Users interested in custom domains
+SELECT p.email, p.display_name, p.custom_data->'waitlist_interests'->>'requested_domain' as domain
+FROM profiles p
+WHERE p.custom_data->'waitlist_interests'->>'custom_domain' = 'true';
+
+-- Users interested in analytics
+SELECT p.email, p.display_name
+FROM profiles p
+WHERE p.custom_data->'waitlist_interests'->>'analytics' = 'true';
+```
+
+### SQL Migration Required:
+```sql
+-- Run in Supabase SQL Editor
+ALTER TABLE analytics_events
+ADD COLUMN IF NOT EXISTS visitor_session_id uuid,
+ADD COLUMN IF NOT EXISTS metadata jsonb DEFAULT '{}',
+ADD COLUMN IF NOT EXISTS geo_country text;
+
+ALTER TABLE analytics_events DROP CONSTRAINT IF EXISTS analytics_events_event_type_check;
+ALTER TABLE analytics_events ADD CONSTRAINT analytics_events_event_type_check
+CHECK (event_type IN ('page_view','project_click','github_click','demo_click','social_click','resume_download','project_interaction','filter_click'));
+
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS custom_data jsonb DEFAULT '{}';
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS custom_domain text UNIQUE;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS custom_domain_verified boolean DEFAULT false;
+CREATE INDEX IF NOT EXISTS idx_profiles_custom_domain ON profiles(custom_domain) WHERE custom_domain IS NOT NULL;
+```
+
+### New Files Created:
+```
+src/hooks/use-analytics.ts           # Analytics tracking hook
+src/components/ui/locked-card.tsx    # Blur & lock overlay component
+src/app/api/waitlist/route.ts        # Waitlist API endpoint
+```
+
+### Files Modified:
+```
+src/types/index.ts                   # Added new types
+src/middleware.ts                    # Custom domain routing
+src/app/portfolio/[username]/page.tsx # Geo capture + analytics props
+src/components/portfolio/themes/*.tsx # All 3 themes with tracking
+src/app/(dashboard)/dashboard/dashboard-content.tsx # Locked cards
+src/app/(dashboard)/dashboard/settings/settings-content.tsx # Custom domain UI
+src/i18n/messages/*.json             # New translation keys
+```
+
+---
+
 ## App Routes
 
 ```

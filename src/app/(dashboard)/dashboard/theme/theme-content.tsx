@@ -170,7 +170,7 @@ export function ThemeContent({ profile }: ThemeContentProps) {
               <RefreshCw className={cn("w-4 h-4 mr-2", isIframeLoading && "animate-spin")} />
               {t("preview.refresh")}
             </Button>
-            <Link href={portfolioUrl} target="_blank">
+            <Link href={previewUrl} target="_blank">
               <Button size="sm">
                 <ExternalLink className="w-4 h-4 mr-2" />
                 {t("preview.viewLive")}

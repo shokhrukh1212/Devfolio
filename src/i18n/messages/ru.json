@@ -80,7 +80,11 @@
       "comingSoonPro": "Скоро в Pro",
       "proFeatureDescription": "Разблокируйте детальную аналитику с Pro",
       "topLocations": "Откуда ваши посетители",
-      "topLocationsDescription": "Географическое распределение посетителей"
+      "topLocationsDescription": "Географическое распределение посетителей",
+      "topSources": "Источники трафика",
+      "topSourcesDescription": "Откуда пришли ваши посетители",
+      "unlockData": "Открыть данные",
+      "onWaitlist": "Вы в списке ожидания!"
     },
     "days": {
       "sun": "Вс",
@@ -159,6 +163,18 @@
       "websitePlaceholder": "https://...",
       "twitter": "Twitter / X URL",
       "twitterPlaceholder": "https://x.com/..."
+    },
+    "customDomain": {
+      "title": "Свой домен",
+      "description": "Подключите свой домен к портфолио.",
+      "placeholder": "www.вашдомен.com",
+      "connect": "Подключить",
+      "comingSoon": {
+        "title": "Свои домены скоро!",
+        "description": "Мы завершаем настройку DNS инфраструктуры. Хотите получить ранний доступ?",
+        "notify": "Уведомить меня",
+        "success": "Вы в списке! Мы уведомим вас."
+      }
     }
   },
   "themeSelection": {
