@@ -12,6 +12,13 @@ export default async function ProjectsPage() {
     redirect("/login");
   }
 
+  // Get profile with GitHub username
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
   // Get projects
   const { data: projects } = await supabase
     .from("projects")
@@ -19,5 +26,11 @@ export default async function ProjectsPage() {
     .eq("profile_id", user.id)
     .order("display_order", { ascending: true });
 
-  return <ProjectsContent initialProjects={projects || []} userId={user.id} />;
+  return (
+    <ProjectsContent
+      initialProjects={projects || []}
+      userId={user.id}
+      githubUsername={profile?.username || ""}
+    />
+  );
 }

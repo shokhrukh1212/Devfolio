@@ -12,11 +12,19 @@ import {
   ExternalLink,
   Menu,
   X,
+  ChevronDown,
+  Settings,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { LanguageSelector } from "@/components/language-selector";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useTranslations } from "next-intl";
@@ -85,24 +93,45 @@ export function DashboardSidebar({ user, profile }: DashboardSidebarProps) {
           </p>
         </div>
 
-        {/* User Info */}
+        {/* User Info - Dropdown */}
         <div className="p-4 border-b border-border">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={profile?.avatar_url || undefined} />
-              <AvatarFallback>
-                {profile?.display_name?.[0] || user.email?.[0] || "U"}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">
-                {profile?.display_name || "User"}
-              </p>
-              <p className="text-xs text-muted-foreground truncate">
-                @{profile?.username || "username"}
-              </p>
-            </div>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="w-full flex items-center gap-3 p-2 -m-2 rounded-lg hover:bg-muted transition-colors">
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src={profile?.avatar_url || undefined} />
+                  <AvatarFallback>
+                    {profile?.display_name?.[0] || user.email?.[0] || "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0 text-left">
+                  <p className="text-sm font-medium truncate">
+                    {profile?.display_name || "User"}
+                  </p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    @{profile?.username || "username"}
+                  </p>
+                </div>
+                <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-56">
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/settings" className="cursor-pointer">
+                  <Settings className="h-4 w-4 mr-2" />
+                  {t("manageAccount")}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                {t("signOut")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {/* Navigation */}
@@ -126,32 +155,26 @@ export function DashboardSidebar({ user, profile }: DashboardSidebarProps) {
         </nav>
 
         {/* Footer Actions */}
-        <div className="p-4 border-t border-border space-y-2">
-          {/* Language Selector */}
+        <div className="p-4 border-t border-border">
+          {/* Language Selector - Bordered */}
           <LanguageSelector variant="sidebar" />
 
-          {/* Theme Toggle */}
-          <ThemeToggle />
+          {/* Theme Toggle - Gray Background */}
+          <div className="mt-2">
+            <ThemeToggle />
+          </div>
 
+          {/* Portfolio Button - Primary */}
           {profile?.username && (
             <a
               href={`/portfolio/${profile.username}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
+              className="flex items-center justify-center gap-2 w-full h-10 mt-4 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
             >
               {t("viewPortfolio")} <ExternalLink className="w-3.5 h-3.5" />
             </a>
           )}
-
-          <Button
-            variant="ghost"
-            className="w-full justify-start text-muted-foreground hover:text-destructive"
-            onClick={handleLogout}
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            {t("signOut")}
-          </Button>
         </div>
       </aside>
     </>

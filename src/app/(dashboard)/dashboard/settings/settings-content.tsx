@@ -25,7 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import type { Profile } from "@/types";
@@ -51,10 +51,24 @@ interface SettingsContentProps {
 
 export function SettingsContent({ profile }: SettingsContentProps) {
   const [isUpdating, setIsUpdating] = useState(false);
+  const [copied, setCopied] = useState(false);
   const supabase = createClient();
   const t = useTranslations("settings");
   const tCommon = useTranslations("common");
   const tToast = useTranslations("toast");
+
+  const portfolioUrl = `https://${profile?.username}.devfolio.uz`;
+
+  const handleCopyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(portfolioUrl);
+      setCopied(true);
+      toast.success(tToast("urlCopied"));
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error(tToast("copyFailed"));
+    }
+  };
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -131,11 +145,25 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                       <FormLabel className="text-base">
                         {t("portfolioStatus.publishLabel")}
                       </FormLabel>
-                      <FormDescription>
-                        {t("portfolioStatus.publishDescription")}{" "}
-                        <code className="text-xs bg-muted px-1 py-0.5 rounded">
-                          {profile?.username}.devfolio.uz
-                        </code>
+                      <FormDescription className="flex items-center gap-2 flex-wrap">
+                        <span>{t("portfolioStatus.publishDescription")}</span>
+                        <span className="inline-flex items-center gap-1.5">
+                          <code className="text-xs bg-muted px-1.5 py-0.5 rounded">
+                            {profile?.username}.devfolio.uz
+                          </code>
+                          <button
+                            type="button"
+                            onClick={handleCopyUrl}
+                            className="p-1 hover:bg-muted rounded transition-colors"
+                            title={t("copyUrl")}
+                          >
+                            {copied ? (
+                              <Check className="h-3.5 w-3.5 text-green-500" />
+                            ) : (
+                              <Copy className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
+                            )}
+                          </button>
+                        </span>
                       </FormDescription>
                     </div>
                     <FormControl>

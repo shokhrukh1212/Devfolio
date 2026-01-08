@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowRight, Eye, FolderGit2, Star } from "lucide-react";
+import { ArrowRight, Eye, FolderGit2, Star, Share2, Lock, MapPin, Copy, Check } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
+import { toast } from "sonner";
 import type { Profile, Project, AnalyticsEvent } from "@/types";
 
 interface DashboardContentProps {
@@ -17,7 +18,9 @@ interface DashboardContentProps {
 
 export function DashboardContent({ profile, projects, analytics }: DashboardContentProps) {
   const t = useTranslations("dashboard.overview");
-  const tDays = useTranslations("dashboard.days");
+  const tToast = useTranslations("toast");
+  const [copied, setCopied] = useState(false);
+
   // Calculate stats
   const totalProjects = projects.length;
   const visibleProjects = projects.filter((p) => p.is_visible).length;
@@ -26,6 +29,19 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
 
   // Group analytics by day for chart
   const analyticsData = getAnalyticsChartData(analytics);
+
+  const portfolioUrl = `${profile?.username}.devfolio.uz`;
+
+  const handleCopyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(`https://${portfolioUrl}`);
+      setCopied(true);
+      toast.success(tToast("urlCopied"));
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error(tToast("copyFailed"));
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -45,6 +61,41 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
           </Button>
         </Link>
       </div>
+
+      {/* Share Your Portfolio */}
+      <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+        <CardContent className="py-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <Share2 className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="font-medium text-sm">{t("shareYourPortfolio")}</p>
+                <p className="text-muted-foreground text-sm">{portfolioUrl}</p>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCopyUrl}
+              className="gap-2"
+            >
+              {copied ? (
+                <>
+                  <Check className="h-4 w-4" />
+                  {t("copied")}
+                </>
+              ) : (
+                <>
+                  <Copy className="h-4 w-4" />
+                  {t("copyLink")}
+                </>
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -124,6 +175,42 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
                 />
               </BarChart>
             </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Coming Soon - Pro Feature */}
+      <Card className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-background/80 to-background/95 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-full border border-primary/20 mb-2">
+            <Lock className="h-3.5 w-3.5 text-primary" />
+            <span className="text-xs font-medium text-primary">{t("comingSoonPro")}</span>
+          </div>
+          <p className="text-sm text-muted-foreground">{t("proFeatureDescription")}</p>
+        </div>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MapPin className="h-5 w-5" />
+            {t("topLocations")}
+          </CardTitle>
+          <CardDescription>{t("topLocationsDescription")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {["United States", "Germany", "India", "United Kingdom", "Canada"].map((country, i) => (
+              <div key={country} className="flex items-center justify-between">
+                <span className="text-sm">{country}</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-primary/40 rounded-full"
+                      style={{ width: `${100 - i * 20}%` }}
+                    />
+                  </div>
+                  <span className="text-xs text-muted-foreground w-8">{100 - i * 20}%</span>
+                </div>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>

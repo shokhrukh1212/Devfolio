@@ -59,7 +59,8 @@
       "profile": "Profile",
       "theme": "Theme",
       "viewPortfolio": "View Portfolio",
-      "signOut": "Log out"
+      "manageAccount": "Manage Account",
+      "signOut": "Sign Out"
     },
     "overview": {
       "welcome": "Welcome back, {name}",
@@ -72,7 +73,14 @@
       "profileViews": "Profile Views",
       "lastDays": "Last 7 days",
       "visitorActivity": "Visitor Activity",
-      "viewsOverDays": "Views over the last 7 days"
+      "viewsOverDays": "Views over the last 7 days",
+      "shareYourPortfolio": "Share your portfolio",
+      "copyLink": "Copy Link",
+      "copied": "Copied!",
+      "comingSoonPro": "Coming soon in Pro",
+      "proFeatureDescription": "Unlock detailed analytics with Pro",
+      "topLocations": "Top Visitor Locations",
+      "topLocationsDescription": "Where your visitors are coming from"
     },
     "days": {
       "sun": "Sun",
@@ -108,6 +116,13 @@
       "usernameLabel": "GitHub Username",
       "usernamePlaceholder": "e.g. torvalds",
       "syncing": "Syncing..."
+    },
+    "edit": {
+      "title": "Edit Project",
+      "description": "Customize how this project appears on your portfolio.",
+      "projectTitle": "Project Title",
+      "projectDescription": "Description",
+      "demoUrl": "Demo URL"
     }
   },
   "settings": {
@@ -119,6 +134,7 @@
       "publishLabel": "Publish Portfolio",
       "publishDescription": "When enabled, your portfolio will be visible at"
     },
+    "copyUrl": "Copy URL",
     "basicInfo": {
       "title": "Basic Information",
       "description": "Tell us about yourself and what you do.",
@@ -149,9 +165,10 @@
     "title": "Theme Selection",
     "description": "Choose how your portfolio looks to the world. Changes are applied immediately.",
     "preview": {
-      "title": "Preview your portfolio",
+      "title": "Live Preview",
       "description": "See how your selected theme looks with your real data.",
-      "viewLive": "View Live Portfolio"
+      "viewLive": "Open in New Tab",
+      "refresh": "Refresh"
     },
     "themes": {
       "minimal": {
@@ -178,11 +195,13 @@
     "themeChanged": "Theme changed to {theme}",
     "themeChangeFailed": "Failed to update theme",
     "syncSuccess": "Synced {count} projects from GitHub",
-    "syncFailed": "Failed to sync projects"
+    "syncFailed": "Failed to sync projects",
+    "urlCopied": "Portfolio URL copied to clipboard",
+    "copyFailed": "Failed to copy URL"
   },
   "theme": {
-    "light": "Light Mode",
-    "dark": "Dark Mode",
+    "light": "Light",
+    "dark": "Dark",
     "system": "System"
   },
   "language": {
