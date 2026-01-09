@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { ProjectsContent } from "./projects-content";
+import { getProfile, getProjects } from "@/lib/data";
 
 export default async function ProjectsPage() {
   const supabase = await createClient();
@@ -12,19 +13,11 @@ export default async function ProjectsPage() {
     redirect("/login");
   }
 
-  // Get profile with GitHub username
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
-
-  // Get projects
-  const { data: projects } = await supabase
-    .from("projects")
-    .select("*")
-    .eq("profile_id", user.id)
-    .order("display_order", { ascending: true });
+  // Fetch profile and projects in parallel using cached functions
+  const [profile, projects] = await Promise.all([
+    getProfile(user.id),
+    getProjects(user.id),
+  ]);
 
   return (
     <ProjectsContent

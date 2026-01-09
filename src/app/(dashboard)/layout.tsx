@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { DashboardSidebar } from "@/components/dashboard/sidebar";
 import { FloatingFeedbackButton } from "@/components/floating-feedback-button";
+import { getProfile } from "@/lib/data";
 
 export default async function DashboardLayout({
   children,
@@ -17,12 +18,8 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  // Get user profile
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
+  // Get user profile (cached - deduplicates with page fetches)
+  const profile = await getProfile(user.id);
 
   return (
     <div className="min-h-screen bg-background">

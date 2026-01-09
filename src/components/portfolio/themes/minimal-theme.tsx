@@ -55,13 +55,13 @@ export function MinimalTheme({
     });
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-foreground selection:text-background">
-      <div className="max-w-3xl mx-auto px-6 py-24">
+    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-foreground selection:text-background flex flex-col">
+      <div className="max-w-3xl mx-auto px-6 py-24 flex-1 w-full">
         <motion.div
           initial="hidden"
           animate="show"
           variants={container}
-          className="space-y-16"
+          className="space-y-16 flex flex-col min-h-full"
         >
           {/* Header */}
           <motion.header variants={item} className="space-y-6">
@@ -211,7 +211,7 @@ export function MinimalTheme({
 
           <motion.footer
             variants={item}
-            className="text-center text-sm text-muted-foreground"
+            className="text-center text-sm text-muted-foreground mt-auto pt-8"
           >
             <p>
               © {new Date().getFullYear()} {profile.display_name}. Built with

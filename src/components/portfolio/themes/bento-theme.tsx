@@ -57,8 +57,8 @@ export function BentoTheme({
     });
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans p-4 md:p-8">
-      <div className="max-w-7xl mx-auto space-y-4">
+    <div className="min-h-screen bg-background text-foreground font-sans p-4 md:p-8 flex flex-col">
+      <div className="max-w-7xl mx-auto space-y-4 flex-1 w-full">
         {/* Profile Header Block */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           <motion.div
@@ -228,11 +228,12 @@ export function BentoTheme({
           ))}
         </div>
 
-        <footer className="text-center py-8 text-muted-foreground text-sm font-medium">
-          © {new Date().getFullYear()} {profile.display_name}. Built with
-          RepoSpace.
-        </footer>
       </div>
+
+      <footer className="text-center py-8 text-muted-foreground text-sm font-medium max-w-7xl mx-auto w-full">
+        © {new Date().getFullYear()} {profile.display_name}. Built with
+        RepoSpace.
+      </footer>
     </div>
   );
 }
