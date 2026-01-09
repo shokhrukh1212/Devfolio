@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { DashboardSidebar } from "@/components/dashboard/sidebar";
+import { FloatingFeedbackButton } from "@/components/floating-feedback-button";
 
 export default async function DashboardLayout({
   children,
@@ -27,8 +28,11 @@ export default async function DashboardLayout({
     <div className="min-h-screen bg-background">
       <DashboardSidebar user={user} profile={profile} />
       <main className="lg:pl-72">
-        <div className="p-6 lg:p-8">{children}</div>
+        <div className="p-6 pb-22 lg:p-8 lg:pb-24">{children}</div>
       </main>
+
+      {/* Floating Feedback Button */}
+      <FloatingFeedbackButton userId={user.id} userEmail={profile?.email} />
     </div>
   );
 }

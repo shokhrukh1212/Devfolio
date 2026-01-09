@@ -3,16 +3,18 @@
     "signIn": "Sign In",
     "signOut": "Log out",
     "save": "Save Changes",
+    "saving": "Saving...",
     "cancel": "Cancel",
     "delete": "Delete",
     "loading": "Loading...",
     "search": "Search",
-    "devfolio": "Devfolio"
+    "devfolio": "RepoSpace",
+    "feedback": "Feedback"
   },
   "landing": {
     "hero": {
-      "badge": "Build your portfolio in 60 seconds",
-      "title": "GitHub \u2192 Portfolio \u2192 Share",
+      "badge": "A ready portfolio in one minute.",
+      "title": "GitHub \u2192 Portfolio \u2192 Show it to employers",
       "description": "Transform your GitHub profile into a beautiful developer portfolio. No design skills required. Choose a theme, import your projects, and go live instantly."
     },
     "cta": {
@@ -22,23 +24,23 @@
     "features": {
       "quickSetup": {
         "title": "Quick Setup",
-        "description": "Sign in with GitHub, select your best projects, and your portfolio is ready in under a minute."
+        "description": "Ready to use in 1 minute"
       },
       "themes": {
         "title": "3 Beautiful Themes",
-        "description": "Choose from Minimal, Bento Grid, or Terminal Dark. Each theme is mobile-friendly and SEO-ready."
+        "description": "Mobile-friendly and SEO-optimized"
       },
       "subdomain": {
         "title": "Free Subdomain",
-        "description": "Get your own portfolio at username.devfolio.uz. Custom domains coming soon."
+        "description": "Share instantly"
       }
     },
     "ctaSection": {
-      "title": "Ready to build your portfolio?",
-      "description": "Join developers who use Devfolio to showcase their work and land opportunities."
+      "title": "Create your first portfolio today",
+      "description": "Join developers who use RepoSpace to showcase their work and land opportunities."
     },
     "footer": {
-      "copyright": "\u00a9 {year} Devfolio. All rights reserved."
+      "copyright": "\u00a9 {year} RepoSpace. All rights reserved."
     }
   },
   "login": {
@@ -46,19 +48,19 @@
     "title": "Welcome",
     "description": "Create your developer portfolio in minutes",
     "continueWithGithub": "Continue with GitHub",
-    "terms": "By continuing, you agree to our Terms of Service",
     "quickSetup": "Quick Setup",
     "themes": "3 Themes",
     "freeSubdomain": "Free Subdomain"
   },
   "dashboard": {
     "sidebar": {
-      "buildShowcase": "Build your showcase",
+      "buildShowcase": "Create your professional portfolio",
       "overview": "Overview",
       "projects": "Projects",
       "profile": "Profile",
       "theme": "Theme",
       "viewPortfolio": "View Portfolio",
+      "helpFeedback": "Help & Feedback",
       "manageAccount": "Manage Account",
       "signOut": "Sign Out"
     },
@@ -80,9 +82,9 @@
       "comingSoonPro": "Coming soon in Pro",
       "proFeatureDescription": "Unlock detailed analytics with Pro",
       "topLocations": "Top Visitor Locations",
-      "topLocationsDescription": "Where your visitors are coming from",
+      "topLocationsDescription": "Find out which countries (or cities) your visitors are from.",
       "topSources": "Top Traffic Sources",
-      "topSourcesDescription": "Where your visitors came from",
+      "topSourcesDescription": "See which platforms (e.g., Google, social networks) your visitors came through.",
       "unlockData": "Unlock Visitor Data",
       "onWaitlist": "You're on the waitlist!"
     },
@@ -128,6 +130,28 @@
       "projectDescription": "Description",
       "demoUrl": "Demo URL"
     }
+  },
+  "githubSync": {
+    "title": "Select Projects to Import",
+    "loading": "Loading your repositories...",
+    "reposFound": "{count} repositories found. Select which ones to add to your portfolio.",
+    "excludeForks": "Exclude Forks",
+    "excludeArchived": "Exclude Archived",
+    "sort": "Sort",
+    "mostStars": "Most Stars",
+    "newest": "Newest",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All",
+    "limitReached": "Limit reached ({max}/{max})",
+    "selectedCount": "{selected} selected ({remaining} slots left)",
+    "alreadyInPortfolio": "Already in Portfolio",
+    "fork": "Fork",
+    "archived": "Archived",
+    "cancel": "Cancel",
+    "skipImport": "Skip Import",
+    "importProjects": "Import {count} Projects",
+    "canOnlyImport": "You can only import {count} more projects",
+    "noNewProjects": "No new projects to import"
   },
   "settings": {
     "title": "Profile Settings",
@@ -213,7 +237,26 @@
     "syncSuccess": "Synced {count} projects from GitHub",
     "syncFailed": "Failed to sync projects",
     "urlCopied": "Portfolio URL copied to clipboard",
-    "copyFailed": "Failed to copy URL"
+    "copyFailed": "Failed to copy URL",
+    "portfolioNotPublished": "Your portfolio is currently hidden. Enable 'Publish Portfolio' in settings to view it.",
+    "feedbackSubmitted": "Thank you for your feedback!",
+    "feedbackSubmitFailed": "Failed to submit feedback",
+    "feedbackRequired": "Please select a type and enter your feedback"
+  },
+  "feedback": {
+    "title": "How can we improve?",
+    "description": "We'd love to hear your thoughts and suggestions.",
+    "typeLabel": "Type",
+    "typePlaceholder": "Select feedback type",
+    "typeBug": "Bug",
+    "typeFeature": "Feature Request",
+    "typeOther": "Other",
+    "messageLabel": "Message",
+    "messagePlaceholder": "I found a bug on the projects page...",
+    "cancel": "Cancel",
+    "submit": "Send Feedback",
+    "sending": "Sending...",
+    "emailNote": "If additional questions arise, we will contact you via ({email})"
   },
   "theme": {
     "light": "Light",
@@ -228,5 +271,10 @@
   },
   "validation": {
     "displayNameRequired": "Display name is required"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for doesn't exist or has been moved.",
+    "returnHome": "Return Home"
   }
 }

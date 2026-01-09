@@ -31,29 +31,37 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${profile.display_name || username} | Devfolio`,
+    title: `${profile.display_name || username} | RepoSpace`,
     description: profile.bio || `${profile.display_name}'s developer portfolio`,
     openGraph: {
-      title: `${profile.display_name || username} | Devfolio`,
-      description: profile.bio || `${profile.display_name}'s developer portfolio`,
+      title: `${profile.display_name || username} | RepoSpace`,
+      description:
+        profile.bio || `${profile.display_name}'s developer portfolio`,
       images: profile.avatar_url ? [profile.avatar_url] : [],
     },
   };
 }
 
-export default async function PortfolioPage({ params, searchParams }: PortfolioPageProps) {
+export default async function PortfolioPage({
+  params,
+  searchParams,
+}: PortfolioPageProps) {
   const { username } = await params;
   const { preview } = await searchParams;
-  const supabase = await createClient();
 
-  // Get geo-location from Vercel headers
   const headersList = await headers();
-  const geoCountry = headersList.get("x-vercel-ip-country") || null;
+  const visitorCountry = headersList.get("x-vercel-ip-country") || null;
+  const visitorCity = headersList.get("x-vercel-ip-city") || null;
+  const serverReferrer = headersList.get("referer") || null;
+
+  const supabase = await createClient();
 
   const isPreviewMode = preview === "true";
 
   // Get current user session first (needed for owner preview check)
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   // Fetch profile - if preview mode, allow unpublished portfolios for owner
   let profileQuery = supabase
@@ -77,12 +85,13 @@ export default async function PortfolioPage({ params, searchParams }: PortfolioP
     notFound();
   }
 
-  // Fetch projects
+  // Fetch projects - featured first, then by display_order
   const { data: projects } = await supabase
     .from("projects")
     .select("*")
     .eq("profile_id", profile.id)
     .eq("is_visible", true)
+    .order("is_featured", { ascending: false })
     .order("display_order", { ascending: true });
 
   // Self-View Guard: Don't track if preview mode or owner is viewing
@@ -92,11 +101,17 @@ export default async function PortfolioPage({ params, searchParams }: PortfolioP
   const analyticsProps = {
     isOwner: isOwnerViewing,
     isPreview: isPreviewMode,
-    geoCountry,
+    visitorCountry,
+    visitorCity,
+    serverReferrer,
   };
 
   // Render the appropriate theme
-  const themeProps = { profile, projects: projects || [], ...analyticsProps };
+  const themeProps = {
+    profile,
+    projects: projects || [],
+    ...analyticsProps,
+  };
 
   switch (profile.theme) {
     case "bento":

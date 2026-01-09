@@ -5,7 +5,14 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Check, LayoutTemplate, Terminal, Type, ExternalLink, RefreshCw } from "lucide-react";
+import {
+  Check,
+  LayoutTemplate,
+  Terminal,
+  Type,
+  ExternalLink,
+  RefreshCw,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import type { Profile, ThemeName } from "@/types";
@@ -20,12 +27,12 @@ const themeOptions: ThemeOption[] = [
   {
     id: "minimal",
     icon: <Type className="w-5 h-5" />,
-    colors: "bg-white border-zinc-200",
+    colors: "bg-background border-border",
   },
   {
     id: "bento",
     icon: <LayoutTemplate className="w-5 h-5" />,
-    colors: "bg-zinc-50 border-zinc-200",
+    colors: "bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800",
   },
   {
     id: "terminal",
@@ -68,7 +75,9 @@ export function ThemeContent({ profile }: ThemeContentProps) {
       setTimeout(() => {
         setIframeKey((prev) => prev + 1);
       }, 300);
-      toast.success(tToast("themeChanged", { theme: t(`themes.${themeId}.name`) }));
+      toast.success(
+        tToast("themeChanged", { theme: t(`themes.${themeId}.name`) })
+      );
     } catch (error) {
       toast.error(tToast("themeChangeFailed"));
       console.error(error);
@@ -87,9 +96,7 @@ export function ThemeContent({ profile }: ThemeContentProps) {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold font-heading">{t("title")}</h1>
-        <p className="text-muted-foreground mt-1">
-          {t("description")}
-        </p>
+        <p className="text-muted-foreground mt-1">{t("description")}</p>
       </div>
 
       {/* Theme Grid */}
@@ -167,7 +174,12 @@ export function ThemeContent({ profile }: ThemeContentProps) {
               onClick={handleRefreshPreview}
               disabled={isIframeLoading}
             >
-              <RefreshCw className={cn("w-4 h-4 mr-2", isIframeLoading && "animate-spin")} />
+              <RefreshCw
+                className={cn(
+                  "w-4 h-4 mr-2",
+                  isIframeLoading && "animate-spin"
+                )}
+              />
               {t("preview.refresh")}
             </Button>
             <Link href={previewUrl} target="_blank">
@@ -190,7 +202,7 @@ export function ThemeContent({ profile }: ThemeContentProps) {
             </div>
             <div className="flex-1 ml-4">
               <div className="bg-background rounded-md px-3 py-1 text-xs text-muted-foreground border max-w-md">
-                {profile?.username}.devfolio.uz
+                {profile?.username}.repospace.uz
               </div>
             </div>
           </div>

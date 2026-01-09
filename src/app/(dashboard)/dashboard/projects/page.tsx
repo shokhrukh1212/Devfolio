@@ -31,6 +31,9 @@ export default async function ProjectsPage() {
       initialProjects={projects || []}
       userId={user.id}
       githubUsername={profile?.username || ""}
+      planTier={profile?.plan_tier || "free"}
+      currentBio={profile?.bio}
+      currentLocation={profile?.location}
     />
   );
 }

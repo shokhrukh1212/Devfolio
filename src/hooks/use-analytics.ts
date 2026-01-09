@@ -38,7 +38,9 @@ interface UseAnalyticsProps {
   profileId: string;
   isOwner?: boolean;
   isPreview?: boolean;
-  geoCountry?: string | null;
+  visitorCountry?: string | null;
+  visitorCity?: string | null;
+  serverReferrer?: string | null;
 }
 
 interface TrackEventParams {
@@ -47,7 +49,14 @@ interface TrackEventParams {
   metadata?: AnalyticsMetadata;
 }
 
-export function useAnalytics({ profileId, isOwner = false, isPreview = false, geoCountry }: UseAnalyticsProps) {
+export function useAnalytics({
+  profileId,
+  isOwner = false,
+  isPreview = false,
+  visitorCountry,
+  visitorCity,
+  serverReferrer,
+}: UseAnalyticsProps) {
   const supabase = createClient();
   const sessionIdRef = useRef<string>("");
   const pageViewTrackedRef = useRef(false);
@@ -68,7 +77,8 @@ export function useAnalytics({ profileId, isOwner = false, isPreview = false, ge
       return;
     }
 
-    const referrer = typeof document !== "undefined" ? document.referrer : "";
+    // Use server referrer if available, otherwise fall back to document.referrer
+    const referrer = serverReferrer || (typeof document !== "undefined" ? document.referrer : "");
     const userAgent = typeof navigator !== "undefined" ? navigator.userAgent : "";
 
     // Enrich metadata with referrer type
@@ -85,14 +95,15 @@ export function useAnalytics({ profileId, isOwner = false, isPreview = false, ge
         project_id: projectId || null,
         metadata: enrichedMetadata,
         referrer: referrer || null,
-        geo_country: geoCountry || null,
+        visitor_country: visitorCountry || null,
+        visitor_city: visitorCity || null,
         user_agent: userAgent || null,
       });
     } catch (error) {
       // Silently fail - don't break the app for analytics
       console.error("Analytics tracking failed:", error);
     }
-  }, [supabase, profileId, isOwner, isPreview, geoCountry]);
+  }, [supabase, profileId, isOwner, isPreview, visitorCountry, visitorCity, serverReferrer]);
 
   // Track page view (only once per session)
   const trackPageView = useCallback(() => {

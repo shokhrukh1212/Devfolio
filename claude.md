@@ -2,8 +2,6 @@
 
 ## Project Overview
 
-Build a SaaS application that transforms GitHub profiles into professional portfolio websites. Users authenticate with GitHub, select repositories to showcase, choose a visual theme, and receive a hosted portfolio at `username.devfolio.uz`.
-
 ---
 
 ## Technical Stack
@@ -27,7 +25,7 @@ Build a SaaS application that transforms GitHub profiles into professional portf
 ### Infrastructure
 
 - **Hosting:** Vercel
-- **Domains:** Wildcard subdomain routing (`*.devfolio.uz`)
+- **Domains:** Wildcard subdomain routing (`*.repospace.uz`)
 
 ---
 
@@ -403,8 +401,8 @@ export function MinimalTheme({ profile, projects }: MinimalThemeProps) {
 
       <footer className="text-center py-8 text-sm text-zinc-500">
         Built with{" "}
-        <a href="https://devfolio.uz" className="underline">
-          Devfolio
+        <a href="https://repospace.uz" className="underline">
+          RepoSpace
         </a>
       </footer>
     </div>
@@ -573,11 +571,11 @@ export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
 
   // Extract subdomain
-  // hostname: "aziz.devfolio.uz" -> subdomain: "aziz"
-  // hostname: "devfolio.uz" -> subdomain: null
+  // hostname: "aziz.repospace.uz" -> subdomain: "aziz"
+  // hostname: "repospace.uz" -> subdomain: null
   // hostname: "localhost:3000" -> subdomain: null
 
-  const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "devfolio.uz";
+  const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "repospace.uz";
   const isLocalhost = hostname.includes("localhost");
 
   let subdomain: string | null = null;
@@ -638,7 +636,7 @@ export const config = {
 
 ### Flow 1: New User Onboarding
 
-1. User lands on `devfolio.uz`
+1. User lands on `repospace.uz`
 2. Clicks "Login with GitHub"
 3. Supabase OAuth redirects to GitHub
 4. User authorizes, redirected to `/callback`
@@ -663,7 +661,7 @@ export const config = {
 1. User selects theme on `/theme`
 2. User clicks "Publish" on dashboard
 3. System sets `is_published = true`
-4. Portfolio is now live at `username.devfolio.uz`
+4. Portfolio is now live at `username.repospace.uz`
 5. Static page is generated with ISR for fast loading
 
 ---
@@ -680,8 +678,8 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...
 # GitHub App Client ID and Secret are in Supabase dashboard
 
 # Domain
-NEXT_PUBLIC_BASE_DOMAIN=devfolio.uz
-NEXT_PUBLIC_APP_URL=https://devfolio.uz
+NEXT_PUBLIC_BASE_DOMAIN=repospace.uz
+NEXT_PUBLIC_APP_URL=https://repospace.uz
 
 # Vercel (auto-injected)
 VERCEL_URL=
@@ -765,6 +763,7 @@ When implementing this project:
 ### Phase 1: Project Setup & Foundation
 
 **1.1 Initialize Next.js Project**
+
 - [ ] Create new Next.js 14+ project with App Router
 - [ ] Configure TypeScript strict mode
 - [ ] Set up Tailwind CSS with custom theme (fonts: Inter, Space Grotesk, JetBrains Mono)
@@ -772,6 +771,7 @@ When implementing this project:
 - [ ] Set up project folder structure per spec
 
 **1.2 Supabase Setup**
+
 - [ ] Create Supabase project
 - [ ] Run database schema SQL (profiles, projects, analytics_events)
 - [ ] Configure RLS policies
@@ -781,6 +781,7 @@ When implementing this project:
 - [ ] Generate TypeScript types from Supabase
 
 **1.3 Environment Configuration**
+
 - [ ] Set up `.env.local` with Supabase credentials
 - [ ] Configure `NEXT_PUBLIC_BASE_DOMAIN`
 - [ ] Add environment type definitions
@@ -788,6 +789,7 @@ When implementing this project:
 ### Phase 2: Authentication
 
 **2.1 GitHub OAuth Flow**
+
 - [ ] Create `/login` page with GitHub OAuth button
 - [ ] Implement `/auth/callback/route.ts` for OAuth callback
 - [ ] Create middleware for auth protection
@@ -795,6 +797,7 @@ When implementing this project:
 - [ ] Implement logout functionality
 
 **2.2 Auth State Management**
+
 - [ ] Create `useAuth` hook for client-side auth state
 - [ ] Implement protected route wrapper
 - [ ] Add loading states during auth checks
@@ -802,16 +805,19 @@ When implementing this project:
 ### Phase 3: Dashboard & Core Features
 
 **3.1 Dashboard Layout**
+
 - [ ] Create dashboard layout with sidebar navigation
 - [ ] Build responsive mobile menu
 - [ ] Add user avatar dropdown with logout
 
 **3.2 Dashboard Home Page**
+
 - [ ] Display stats cards (total projects, stars, views)
 - [ ] Show 7-day analytics chart (using Recharts)
 - [ ] Quick actions (Import from GitHub, Edit Profile, etc.)
 
 **3.3 Profile Management**
+
 - [ ] Create `/dashboard/settings` page
 - [ ] Build profile edit form (display_name, bio, location)
 - [ ] Social links editor (GitHub, LinkedIn, Twitter, Telegram, website)
@@ -819,6 +825,7 @@ When implementing this project:
 - [ ] Implement profile update Server Action
 
 **3.4 GitHub Repository Fetcher**
+
 - [ ] Create `lib/github/api.ts` with repo fetcher
 - [ ] Fetch user repos using OAuth access token
 - [ ] Filter forks, sort by stars + activity
@@ -826,6 +833,7 @@ When implementing this project:
 - [ ] Cache results to avoid rate limits
 
 **3.5 Project Management**
+
 - [ ] Create `/dashboard/projects` page
 - [ ] Build GitHub Import Modal (select repos to import)
 - [ ] Project list with search/filter
@@ -837,26 +845,31 @@ When implementing this project:
 ### Phase 4: Portfolio Themes
 
 **4.1 Theme System**
+
 - [ ] Create theme components folder structure
 - [ ] Define `ThemeProps` interface (profile, projects)
 
 **4.2 Minimal Theme**
+
 - [ ] Clean, typography-focused design
 - [ ] White/grayscale aesthetic
 - [ ] Responsive layout (max-w-2xl)
 
 **4.3 Bento Theme**
+
 - [ ] Grid-based modular layout
 - [ ] Featured projects span 2 columns
 - [ ] Card-based design
 
 **4.4 Terminal Theme**
+
 - [ ] Monospace/hacker aesthetic
 - [ ] Green-on-black color scheme
 - [ ] ASCII art header
 - [ ] Terminal-style commands for sections
 
 **4.5 Theme Selector**
+
 - [ ] Create `/dashboard/theme` page
 - [ ] Theme preview cards with screenshots
 - [ ] Live preview button
@@ -865,6 +878,7 @@ When implementing this project:
 ### Phase 5: Public Portfolio
 
 **5.1 Portfolio Page**
+
 - [ ] Create `/[username]/page.tsx` with dynamic routing
 - [ ] Fetch profile and projects from Supabase
 - [ ] Render correct theme based on profile.theme
@@ -872,34 +886,40 @@ When implementing this project:
 - [ ] SEO metadata (title, description, og:image)
 
 **5.2 Portfolio Publishing**
+
 - [ ] Add publish/unpublish toggle in dashboard
 - [ ] Show portfolio URL when published
 - [ ] Preview mode for unpublished portfolios
 
 **5.3 ISR (Incremental Static Regeneration)**
+
 - [ ] Configure revalidation for portfolio pages
 - [ ] Revalidate on profile/project updates
 
 ### Phase 6: Subdomain Routing
 
 **6.1 Middleware Setup**
+
 - [ ] Create `middleware.ts` for subdomain detection
 - [ ] Extract subdomain from hostname
-- [ ] Rewrite `username.devfolio.uz` to `/username`
+- [ ] Rewrite `username.repospace.uz` to `/username`
 - [ ] Handle `www` and root domain
 
 **6.2 Local Development**
+
 - [ ] Support `username.localhost:3000` for testing
 - [ ] Document `/etc/hosts` setup for local subdomains
 
 ### Phase 7: Analytics
 
 **7.1 Tracking Implementation**
+
 - [ ] Create `lib/analytics/tracker.ts`
 - [ ] Fire-and-forget tracking (non-blocking)
 - [ ] Track events: page_view, project_click, github_click, demo_click, social_click
 
 **7.2 Analytics API**
+
 - [ ] Create `/api/analytics/track/route.ts`
 - [ ] Extract geo data from Vercel headers
 - [ ] Store in analytics_events table
@@ -908,35 +928,41 @@ When implementing this project:
 ### Phase 8: Landing Page
 
 **8.1 Landing Page Design**
+
 - [ ] Hero section with value proposition
 - [ ] Feature highlights (3-4 key features)
 - [ ] Example portfolios showcase
 - [ ] CTA button (Sign in with GitHub)
 
 **8.2 Footer**
+
 - [ ] Links to GitHub repo
 - [ ] Social links
-- [ ] "Built with Devfolio" branding
+- [ ] "Built with RepoSpace" branding
 
 ### Phase 9: Polish & Production
 
 **9.1 Error Handling**
+
 - [ ] Global error boundary
 - [ ] API error handling with proper messages
 - [ ] Form validation with Zod
 - [ ] Toast notifications for success/error
 
 **9.2 Loading States**
+
 - [ ] Skeleton loaders for data fetching
 - [ ] Button loading states
 - [ ] Page transition animations
 
 **9.3 Mobile Responsiveness**
+
 - [ ] Test all pages on mobile viewports
 - [ ] Fix any layout issues
 - [ ] Touch-friendly interactions
 
 **9.4 Deployment**
+
 - [ ] Configure Vercel project
 - [ ] Set up wildcard subdomain DNS
 - [ ] Add environment variables in Vercel
@@ -946,29 +972,31 @@ When implementing this project:
 
 ## Current Status
 
-| Phase | Status | Notes |
-|-------|--------|-------|
-| Phase 1: Project Setup | ✅ Complete | Next.js 14+, Tailwind, shadcn/ui configured |
-| Phase 2: Authentication | ✅ Complete | GitHub OAuth via Supabase working |
-| Phase 3: Dashboard | ✅ Complete | Overview, Projects, Settings, Theme pages |
-| Phase 4: Themes | ✅ Complete | Minimal, Bento, Terminal themes ported |
-| Phase 5: Public Portfolio | ✅ Complete | Dynamic routing at /portfolio/[username] |
-| Phase 6: Subdomain Routing | ✅ Complete | Middleware configured for subdomains |
-| Phase 7: Analytics | ✅ Complete | Page view tracking implemented |
-| Phase 8: Landing Page | ✅ Complete | Hero, features, CTA sections |
-| Phase 9: Polish | ✅ Complete | i18n, theme toggle, responsive design |
+| Phase                      | Status      | Notes                                       |
+| -------------------------- | ----------- | ------------------------------------------- |
+| Phase 1: Project Setup     | ✅ Complete | Next.js 14+, Tailwind, shadcn/ui configured |
+| Phase 2: Authentication    | ✅ Complete | GitHub OAuth via Supabase working           |
+| Phase 3: Dashboard         | ✅ Complete | Overview, Projects, Settings, Theme pages   |
+| Phase 4: Themes            | ✅ Complete | Minimal, Bento, Terminal themes ported      |
+| Phase 5: Public Portfolio  | ✅ Complete | Dynamic routing at /portfolio/[username]    |
+| Phase 6: Subdomain Routing | ✅ Complete | Middleware configured for subdomains        |
+| Phase 7: Analytics         | ✅ Complete | Page view tracking implemented              |
+| Phase 8: Landing Page      | ✅ Complete | Hero, features, CTA sections                |
+| Phase 9: Polish            | ✅ Complete | i18n, theme toggle, responsive design       |
 
 ---
 
 ## Completed Features
 
 ### Authentication
+
 - [x] GitHub OAuth via Supabase
 - [x] Auto-create profile on first login
 - [x] Protected dashboard routes
 - [x] Logout functionality
 
 ### Dashboard
+
 - [x] Overview page with stats (projects, stars, views)
 - [x] Analytics chart (last 7 days)
 - [x] Projects page with GitHub sync
@@ -978,11 +1006,13 @@ When implementing this project:
 - [x] Publish/unpublish portfolio toggle
 
 ### Portfolio Themes
+
 - [x] Minimal Theme - Clean typography, whitespace
 - [x] Bento Theme - Grid-based modular layout
 - [x] Terminal Theme - Hacker aesthetic with typing effect
 
 ### Internationalization (i18n)
+
 - [x] Multi-language support using `next-intl`
 - [x] 3 languages: English, Uzbek (O'zbekcha), Russian (Русский)
 - [x] Language selector in header (landing, login) and sidebar (dashboard)
@@ -990,6 +1020,7 @@ When implementing this project:
 - [x] Language preference stored in cookies
 
 ### Dark/Light Theme
+
 - [x] Theme toggle using `next-themes`
 - [x] Dark/Light mode support with CSS variables
 - [x] Theme toggle button in dashboard sidebar
@@ -997,6 +1028,7 @@ When implementing this project:
 - [x] System theme detection enabled
 
 ### Infrastructure
+
 - [x] Supabase database with RLS policies
 - [x] Middleware for subdomain routing
 - [x] Analytics event tracking
@@ -1007,44 +1039,52 @@ When implementing this project:
 ## MVP V2 - UX Improvements
 
 ### Auto-Sync GitHub Repos
+
 - [x] Removed GitHub username input dialog
 - [x] "Sync from GitHub" now auto-fetches using stored profile username
 - [x] No more friction or typos - one-click sync
 
 ### Project Edit Modal
+
 - [x] Pencil/edit icon next to each project title
 - [x] Modal to override: Title, Description, Demo URL
 - [x] Example: Rename `backend-v2` to "E-commerce Microservices Architecture"
 
 ### Copy to Clipboard
+
 - [x] Dashboard overview: Share card with portfolio URL + copy button
-- [x] Settings page: Copy icon next to `username.devfolio.uz`
+- [x] Settings page: Copy icon next to `username.repospace.uz`
 - [x] Toast notification on successful copy
 
 ### Pro Feature Teaser
+
 - [x] "Top Visitor Locations" card with blur overlay
 - [x] Lock icon + "Coming soon in Pro" badge
 - [x] Sets stage for future monetization
 
 ### Live Theme Preview
+
 - [x] Replaced gray placeholder with actual iframe preview
 - [x] Browser-style frame with traffic light buttons
 - [x] Refresh button to reload preview after theme change
 - [x] "Open in New Tab" button for full view
 
 ### Segmented Theme Toggle
+
 - [x] Full-width pill tabs: `[ Light | Dark ]`
 - [x] Sliding background animation on switch
 - [x] Hardcoded "Light"/"Dark" labels (not translated)
 - [x] Matches height with language selector (h-10)
 
 ### Language Selector Redesign
+
 - [x] Bordered dropdown style (not ghost button)
 - [x] ChevronDown icon on the right
 - [x] Flag emoji + language name
 - [x] Full width in sidebar, consistent h-10 height
 
 ### User Profile Dropdown
+
 - [x] Moved logout from footer to profile section
 - [x] Clickable profile block with chevron icon
 - [x] Dropdown menu with:
@@ -1052,12 +1092,14 @@ When implementing this project:
   - "Sign Out" → red text styling
 
 ### Analytics Self-View Guard
+
 - [x] **Preview Mode**: Dashboard iframe uses `?preview=true`
 - [x] **Session Check**: Compares visitor ID with portfolio owner ID
 - [x] Owner views (logged in or preview) don't inflate analytics
 - [x] Prevents "polluted data" from self-refreshing
 
 ### Sidebar Visual Hierarchy
+
 ```
 +---------------------------------------+
 | [Avatar] Name               ⌄        |  ← Profile dropdown
@@ -1081,6 +1123,7 @@ When implementing this project:
 ### Block 1: Enhanced Analytics System
 
 **Database Schema Updates:**
+
 - [x] Added `visitor_session_id` (uuid) - tracks unique visitor sessions
 - [x] Added `metadata` (jsonb) - stores referrer_type, duration, project_title, etc.
 - [x] Added `geo_country` (text) - country from Vercel headers
@@ -1088,6 +1131,7 @@ When implementing this project:
 - [x] CHECK constraint updated to include all 8 event types
 
 **Analytics Tracking Hook** (`src/hooks/use-analytics.ts`):
+
 - [x] Generates/retrieves `visitor_session_id` from localStorage
 - [x] Detects recruiter referrers (LinkedIn, Greenhouse, Lever, Workday, Telegram)
 - [x] Tracks: page_view, project_click, github_click, demo_click, social_click
@@ -1095,10 +1139,12 @@ When implementing this project:
 - [x] Project interaction timing (start/end duration tracking)
 
 **Geo-Location Capture:**
+
 - [x] Extracts `x-vercel-ip-country` header in portfolio page
 - [x] Passes to client via ThemeProps for analytics events
 
 **Theme Tracking Integration:**
+
 - [x] All 3 themes (minimal, bento, terminal) use `useAnalytics` hook
 - [x] Track page views on mount
 - [x] Track social link clicks (GitHub, LinkedIn, website, email, Twitter)
@@ -1107,19 +1153,22 @@ When implementing this project:
 ### Block 2: Custom Domains Infrastructure
 
 **Database Updates:**
+
 - [x] Added `custom_data` (jsonb) - stores waitlist interests
 - [x] Added `custom_domain` (text, unique) - user's custom domain
 - [x] Added `custom_domain_verified` (boolean) - DNS verification status
 - [x] Index on `custom_domain` for fast lookups
 
 **Middleware Enhancement** (`src/middleware.ts`):
-- [x] Existing: Subdomain routing (`username.devfolio.uz` → `/portfolio/[username]`)
+
+- [x] Existing: Subdomain routing (`username.repospace.uz` → `/portfolio/[username]`)
 - [x] New: Custom domain lookup (queries verified custom domains in database)
 - [x] Rewrites custom domain requests to portfolio page
 
 ### Block 3: Analytics UI - Blur & Lock Pattern
 
 **LockedCard Component** (`src/components/ui/locked-card.tsx`):
+
 - [x] Blur effect over content (`blur-[6px]`)
 - [x] Semi-transparent overlay
 - [x] "Unlock" button in center
@@ -1127,6 +1176,7 @@ When implementing this project:
 - [x] Success state: "You're on the waitlist!"
 
 **Dashboard Updates:**
+
 - [x] Two locked sections in 2-column grid:
   - **Top Locations** - fake geo data with blur
   - **Top Sources** - LinkedIn, Direct, Telegram, Other with blur
@@ -1134,6 +1184,7 @@ When implementing this project:
 - [x] State persisted via `profiles.custom_data.waitlist_interests.analytics`
 
 **Waitlist API** (`src/app/api/waitlist/route.ts`):
+
 - [x] POST endpoint for joining waitlists
 - [x] Supports features: `analytics`, `custom_domain`
 - [x] Stores metadata (e.g., requested_domain)
@@ -1142,11 +1193,13 @@ When implementing this project:
 ### Block 4: Custom Domain UI - Fake Door Test
 
 **Settings Page Section:**
+
 - [x] Custom Domain card after Social Links
 - [x] Domain input field + "Connect Domain" button
 - [x] Looks fully functional until clicked
 
 **Coming Soon Modal:**
+
 - [x] Triggers when user clicks "Connect Domain"
 - [x] "Custom Domains Coming Soon!" title
 - [x] Description about DNS infrastructure
@@ -1155,6 +1208,7 @@ When implementing this project:
 - [x] Success state: "You're on the list!"
 
 ### Database Query for Launch Day Email:
+
 ```sql
 -- Users interested in custom domains
 SELECT p.email, p.display_name, p.custom_data->'waitlist_interests'->>'requested_domain' as domain
@@ -1168,6 +1222,7 @@ WHERE p.custom_data->'waitlist_interests'->>'analytics' = 'true';
 ```
 
 ### SQL Migration Required:
+
 ```sql
 -- Run in Supabase SQL Editor
 ALTER TABLE analytics_events
@@ -1186,21 +1241,148 @@ CREATE INDEX IF NOT EXISTS idx_profiles_custom_domain ON profiles(custom_domain)
 ```
 
 ### New Files Created:
+
 ```
 src/hooks/use-analytics.ts           # Analytics tracking hook
 src/components/ui/locked-card.tsx    # Blur & lock overlay component
 src/app/api/waitlist/route.ts        # Waitlist API endpoint
+src/components/github-sync-modal.tsx # Reusable GitHub import modal
 ```
 
 ### Files Modified:
+
 ```
 src/types/index.ts                   # Added new types
 src/middleware.ts                    # Custom domain routing
 src/app/portfolio/[username]/page.tsx # Geo capture + analytics props
 src/components/portfolio/themes/*.tsx # All 3 themes with tracking
-src/app/(dashboard)/dashboard/dashboard-content.tsx # Locked cards
+src/app/(dashboard)/dashboard/dashboard-content.tsx # Locked cards + sync modal
 src/app/(dashboard)/dashboard/settings/settings-content.tsx # Custom domain UI
+src/app/(dashboard)/dashboard/projects/projects-content.tsx # Simplified with reusable modal
 src/i18n/messages/*.json             # New translation keys
+```
+
+---
+
+## MVP V4 - GitHub Sync Modal UX Improvements
+
+### Reusable GitHub Sync Modal Component
+
+**Created**: `src/components/github-sync-modal.tsx`
+
+A reusable modal component for importing GitHub repositories that can be used from multiple locations in the app.
+
+**Features:**
+
+- Auto-fetches repos when modal opens
+- Pre-fills profile bio/location from GitHub if empty
+- Shows "Already in Portfolio" badge for existing repos (greyed out, disabled)
+- Filters: Exclude Forks, Exclude Archived toggles
+- Sort by: Most Stars / Newest
+- Select All / Deselect All (only affects NEW repos)
+- Grey star icon when star count is 0
+- "Skip Import" button (secondary style) when 0 selected
+
+**Usage Locations:**
+
+1. **Dashboard** (`dashboard-content.tsx`) - Auto-shows for NEW users (no projects)
+2. **Projects Page** (`projects-content.tsx`) - Manual trigger via "Sync from GitHub" button
+
+**New User Detection Logic:**
+
+- A new user is determined by: `projects.length === 0`
+- NO database column needed (`has_completed_onboarding` removed)
+- Modal auto-shows on dashboard for users with no projects
+- Once they import (or skip), they have projects, so modal won't auto-show again
+
+**Props Interface:**
+
+```typescript
+interface GitHubSyncModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  githubUsername: string;
+  userId: string;
+  existingProjects: Project[];
+  currentBio?: string | null;
+  currentLocation?: string | null;
+  onImportComplete: (newProjects: Project[]) => void;
+}
+```
+
+**Import Logic:**
+
+- Only NEW repos are imported (not already in portfolio based on `github_repo_id`)
+- Existing repos shown with green "Already in Portfolio" badge
+- Checkbox disabled for existing repos
+- display_order continues from existing project count
+
+**Project Limits (MVP Monetization):**
+
+- Free plan: 10 projects
+- Pro plan: 50 projects
+- Lifetime plan: 100 projects
+- UI shows "X / 10 Used" badge in header
+- Footer shows "X selected (Y slots left)"
+- Prevents selecting more than available slots
+
+---
+
+## Plan Tiers & Monetization
+
+### Database Columns (profiles table)
+
+```sql
+plan_tier text DEFAULT 'free' CHECK (plan_tier IN ('free', 'pro', 'lifetime'))
+is_hireable boolean DEFAULT false
+stripe_customer_id text
+stripe_subscription_id text
+billing_period_end timestamptz
+```
+
+### Plan Limits (src/types/index.ts)
+
+```typescript
+export type PlanTier = "free" | "pro" | "lifetime";
+
+export const PLAN_LIMITS: Record<PlanTier, number> = {
+  free: 10,
+  pro: 50,
+  lifetime: 100,
+};
+```
+
+### Database Trigger for Enforcement
+
+```sql
+CREATE OR REPLACE FUNCTION check_project_limit()
+RETURNS TRIGGER AS $$
+DECLARE
+  project_count INTEGER;
+  user_plan TEXT;
+  max_projects INTEGER;
+BEGIN
+  SELECT count(*) INTO project_count FROM public.projects WHERE profile_id = NEW.profile_id;
+  SELECT COALESCE(plan_tier, 'free') INTO user_plan FROM public.profiles WHERE id = NEW.profile_id;
+
+  CASE user_plan
+    WHEN 'free' THEN max_projects := 10;
+    WHEN 'pro' THEN max_projects := 50;
+    WHEN 'lifetime' THEN max_projects := 100;
+    ELSE max_projects := 10;
+  END CASE;
+
+  IF project_count >= max_projects THEN
+    RAISE EXCEPTION 'Project limit reached. Upgrade to add more projects.';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS enforce_project_limit ON public.projects;
+CREATE TRIGGER enforce_project_limit
+BEFORE INSERT ON public.projects
+FOR EACH ROW EXECUTE FUNCTION check_project_limit();
 ```
 
 ---
@@ -1227,17 +1409,18 @@ src/i18n/messages/*.json             # New translation keys
 3. **Import projects** - Sync repos from GitHub
 4. **Preview portfolio** - Check all 3 themes
 5. **Deploy to Vercel** - Configure environment variables
-6. **Set up domain** - Configure wildcard subdomain DNS for devfolio.uz
+6. **Set up domain** - Configure wildcard subdomain DNS for repospace.uz
 
 ---
 
 ## Environment Variables
 
 Required in `.env.local` (already configured):
+
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://rwqzwgnulkrbbcsuqsjq.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGci...
-NEXT_PUBLIC_BASE_DOMAIN=devfolio.uz
+NEXT_PUBLIC_BASE_DOMAIN=repospace.uz
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
