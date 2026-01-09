@@ -1,13 +1,37 @@
 "use client";
 
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LockedCard } from "@/components/ui/locked-card";
-import { ArrowRight, Eye, FolderGit2, Star, Share2, MapPin, Link2, Copy, Check } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { GitHubSyncModal } from "@/components/github-sync-modal";
+import {
+  ArrowRight,
+  Eye,
+  FolderGit2,
+  Star,
+  Share2,
+  MapPin,
+  Copy,
+  Check,
+} from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import type { Profile, Project, AnalyticsEvent } from "@/types";
 
@@ -15,23 +39,49 @@ interface DashboardContentProps {
   profile: Profile | null;
   projects: Project[];
   analytics: AnalyticsEvent[];
+  githubUsername: string;
+  userId: string;
 }
 
-export function DashboardContent({ profile, projects, analytics }: DashboardContentProps) {
+export function DashboardContent({
+  profile,
+  projects: initialProjects,
+  analytics,
+  githubUsername,
+  userId,
+}: DashboardContentProps) {
   const t = useTranslations("dashboard.overview");
   const tToast = useTranslations("toast");
+  const router = useRouter();
+
+  const [projects, setProjects] = useState<Project[]>(initialProjects);
   const [copied, setCopied] = useState(false);
+  const [showSyncModal, setShowSyncModal] = useState(false);
+
+  // Auto-show modal for NEW users (no projects yet)
+  useEffect(() => {
+    if (initialProjects.length === 0 && githubUsername) {
+      setShowSyncModal(true);
+    }
+  }, [initialProjects.length, githubUsername]);
+
+  const handleImportComplete = (newProjects: Project[]) => {
+    setProjects((prev) => [...prev, ...newProjects]);
+    router.refresh();
+  };
 
   // Calculate stats
   const totalProjects = projects.length;
   const visibleProjects = projects.filter((p) => p.is_visible).length;
   const totalStars = projects.reduce((acc, curr) => acc + (curr.stars || 0), 0);
-  const totalViews = analytics.filter((a) => a.event_type === "page_view").length;
+  const totalViews = analytics.filter(
+    (a) => a.event_type === "page_view"
+  ).length;
 
   // Group analytics by day for chart
   const analyticsData = getAnalyticsChartData(analytics);
 
-  const portfolioUrl = `${profile?.username}.devfolio.uz`;
+  const portfolioUrl = `${profile?.username}.repospace.uz`;
 
   const handleCopyUrl = async () => {
     try {
@@ -49,11 +99,11 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold font-heading text-foreground">
-            {t("welcome", { name: profile?.display_name?.split(" ")[0] || "Developer" })}
+            {t("welcome", {
+              name: profile?.display_name?.split(" ")[0] || "Developer",
+            })}
           </h1>
-          <p className="text-muted-foreground mt-1">
-            {t("subtitle")}
-          </p>
+          <p className="text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
 
         <Link href="/dashboard/projects">
@@ -102,7 +152,9 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("totalProjects")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("totalProjects")}
+            </CardTitle>
             <FolderGit2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -115,7 +167,9 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("totalStars")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("totalStars")}
+            </CardTitle>
             <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
           </CardHeader>
           <CardContent>
@@ -126,7 +180,9 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t("profileViews")}</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("profileViews")}
+            </CardTitle>
             <Eye className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
@@ -148,29 +204,38 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
               <BarChart data={analyticsData}>
                 <XAxis
                   dataKey="name"
-                  stroke="#888888"
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
+                  tick={{ fill: "#888888" }}
                 />
                 <YAxis
-                  stroke="#888888"
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={(value) => `${value}`}
+                  tick={{ fill: "#888888" }}
                 />
                 <Tooltip
-                  cursor={{ fill: "transparent" }}
+                  cursor={{ fill: "rgba(128, 128, 128, 0.1)" }}
                   contentStyle={{
                     borderRadius: "8px",
-                    border: "none",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                    border: "1px solid var(--border)",
+                    backgroundColor: "hsl(var(--card))",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                    color: "hsl(var(--card-foreground))",
+                  }}
+                  labelStyle={{
+                    color: "hsl(var(--card-foreground))",
+                    fontWeight: 500,
+                  }}
+                  itemStyle={{
+                    color: "hsl(var(--card-foreground))",
                   }}
                 />
                 <Bar
                   dataKey="views"
-                  fill="hsl(var(--primary))"
+                  fill="#8b5cf6"
                   radius={[4, 4, 0, 0]}
                   maxBarSize={40}
                 />
@@ -188,12 +253,20 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
           description={t("topLocationsDescription")}
           featureKey="analytics"
           userId={profile?.id || ""}
-          initialJoined={profile?.custom_data?.waitlist_interests?.analytics || false}
+          initialJoined={
+            profile?.custom_data?.waitlist_interests?.analytics || false
+          }
           unlockButtonText={t("unlockData")}
           joinedText={t("onWaitlist")}
         >
           <div className="space-y-3">
-            {["United States", "Germany", "India", "United Kingdom", "Canada"].map((country, i) => (
+            {[
+              "United States",
+              "Germany",
+              "India",
+              "United Kingdom",
+              "Canada",
+            ].map((country, i) => (
               <div key={country} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-muted-foreground" />
@@ -206,7 +279,9 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
                       style={{ width: `${100 - i * 20}%` }}
                     />
                   </div>
-                  <span className="text-xs text-muted-foreground w-8">{100 - i * 20}%</span>
+                  <span className="text-xs text-muted-foreground w-8">
+                    {100 - i * 20}%
+                  </span>
                 </div>
               </div>
             ))}
@@ -219,7 +294,9 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
           description={t("topSourcesDescription")}
           featureKey="analytics"
           userId={profile?.id || ""}
-          initialJoined={profile?.custom_data?.waitlist_interests?.analytics || false}
+          initialJoined={
+            profile?.custom_data?.waitlist_interests?.analytics || false
+          }
           unlockButtonText={t("unlockData")}
           joinedText={t("onWaitlist")}
         >
@@ -230,7 +307,10 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
               { name: "Telegram", icon: "📨", percent: 15 },
               { name: "Other", icon: "📊", percent: 10 },
             ].map((source) => (
-              <div key={source.name} className="flex items-center justify-between">
+              <div
+                key={source.name}
+                className="flex items-center justify-between"
+              >
                 <div className="flex items-center gap-2">
                   <span>{source.icon}</span>
                   <span className="text-sm">{source.name}</span>
@@ -242,13 +322,28 @@ export function DashboardContent({ profile, projects, analytics }: DashboardCont
                       style={{ width: `${source.percent}%` }}
                     />
                   </div>
-                  <span className="text-xs text-muted-foreground w-8">{source.percent}%</span>
+                  <span className="text-xs text-muted-foreground w-8">
+                    {source.percent}%
+                  </span>
                 </div>
               </div>
             ))}
           </div>
         </LockedCard>
       </div>
+
+      {/* GitHub Sync Modal */}
+      <GitHubSyncModal
+        open={showSyncModal}
+        onOpenChange={setShowSyncModal}
+        githubUsername={githubUsername}
+        userId={userId}
+        existingProjects={projects}
+        planTier={profile?.plan_tier || "free"}
+        currentBio={profile?.bio}
+        currentLocation={profile?.location}
+        onImportComplete={handleImportComplete}
+      />
     </div>
   );
 }

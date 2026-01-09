@@ -14,6 +14,7 @@ import {
   X,
   ChevronDown,
   Settings,
+  MessageSquare,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -27,7 +28,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LanguageSelector } from "@/components/language-selector";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Logo } from "@/components/ui/logo";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import type { Profile } from "@/types";
 
@@ -41,6 +44,7 @@ export function DashboardSidebar({ user, profile }: DashboardSidebarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const supabase = createClient();
   const t = useTranslations("dashboard.sidebar");
+  const tToast = useTranslations("toast");
 
   const navItems = [
     { href: "/dashboard", label: t("overview"), icon: LayoutDashboard },
@@ -52,6 +56,21 @@ export function DashboardSidebar({ user, profile }: DashboardSidebarProps) {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     window.location.href = "/login";
+  };
+
+  const handleViewPortfolio = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    if (!profile?.is_published) {
+      toast.error(tToast("portfolioNotPublished"));
+      return;
+    }
+
+    window.open(
+      `/portfolio/${profile.username}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
   };
 
   return (
@@ -85,17 +104,15 @@ export function DashboardSidebar({ user, profile }: DashboardSidebarProps) {
       >
         {/* Logo */}
         <div className="p-6 border-b border-border">
-          <h1 className="text-xl font-bold font-heading bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-            Devfolio
-          </h1>
-          <p className="text-xs text-muted-foreground mt-1">
+          <Logo size="md" />
+          <p className="text-xs text-muted-foreground mt-2">
             {t("buildShowcase")}
           </p>
         </div>
 
         {/* User Info - Dropdown */}
         <div className="p-4 border-b border-border">
-          <DropdownMenu>
+          <DropdownMenu modal={true}>
             <DropdownMenuTrigger asChild>
               <button className="w-full flex items-center gap-3 p-2 -m-2 rounded-lg hover:bg-muted transition-colors">
                 <Avatar className="h-10 w-10">
@@ -135,7 +152,7 @@ export function DashboardSidebar({ user, profile }: DashboardSidebarProps) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-4 space-y-1">
+        <nav className="flex-1 px-4 py-6 space-y-1">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -164,19 +181,34 @@ export function DashboardSidebar({ user, profile }: DashboardSidebarProps) {
             <ThemeToggle />
           </div>
 
+          {/* Help & Feedback Button */}
+          {/* <button
+            onClick={() => setFeedbackModalOpen(true)}
+            className="flex items-center justify-center gap-2 w-full h-10 mt-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
+          >
+            <MessageSquare className="w-4 h-4" />
+            {t("helpFeedback")}
+          </button> */}
+
           {/* Portfolio Button - Primary */}
           {profile?.username && (
-            <a
-              href={`/portfolio/${profile.username}`}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={handleViewPortfolio}
               className="flex items-center justify-center gap-2 w-full h-10 mt-4 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
             >
               {t("viewPortfolio")} <ExternalLink className="w-3.5 h-3.5" />
-            </a>
+            </button>
           )}
         </div>
       </aside>
+
+      {/* Feedback Modal */}
+      {/* <FeedbackModal
+        open={feedbackModalOpen}
+        onOpenChange={setFeedbackModalOpen}
+        userId={user.id}
+        userEmail={user.email || profile?.email}
+      /> */}
     </>
   );
 }

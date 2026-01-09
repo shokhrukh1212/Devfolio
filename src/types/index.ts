@@ -11,6 +11,16 @@ export interface ProfileCustomData {
   waitlist_interests?: WaitlistInterests;
 }
 
+// Plan tiers for subscription
+export type PlanTier = "free" | "pro" | "lifetime";
+
+// Plan limits
+export const PLAN_LIMITS: Record<PlanTier, number> = {
+  free: 10,
+  pro: 50,
+  lifetime: 100,
+};
+
 // Profile type
 export interface Profile {
   id: string;
@@ -27,9 +37,14 @@ export interface Profile {
   website_url: string | null;
   theme: "minimal" | "bento" | "terminal";
   is_published: boolean;
+  plan_tier: PlanTier;
+  is_hireable: boolean;
   custom_data: ProfileCustomData | null;
   custom_domain: string | null;
   custom_domain_verified: boolean;
+  stripe_customer_id: string | null;
+  stripe_subscription_id: string | null;
+  billing_period_end: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -86,7 +101,6 @@ export interface AnalyticsEvent {
   metadata: AnalyticsMetadata | null;
   visitor_country: string | null;
   visitor_city: string | null;
-  geo_country: string | null;
   referrer: string | null;
   user_agent: string | null;
   created_at: string;
@@ -115,5 +129,7 @@ export interface ThemeProps {
   projects: Project[];
   isOwner?: boolean;
   isPreview?: boolean;
-  geoCountry?: string | null;
+  visitorCountry?: string | null;
+  visitorCity?: string | null;
+  serverReferrer?: string | null;
 }

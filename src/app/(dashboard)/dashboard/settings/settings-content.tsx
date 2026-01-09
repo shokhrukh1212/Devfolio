@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -66,12 +67,13 @@ export function SettingsContent({ profile }: SettingsContentProps) {
     profile?.custom_data?.waitlist_interests?.custom_domain || false
   );
   const [isJoiningWaitlist, setIsJoiningWaitlist] = useState(false);
+  const router = useRouter();
   const supabase = createClient();
   const t = useTranslations("settings");
   const tCommon = useTranslations("common");
   const tToast = useTranslations("toast");
 
-  const portfolioUrl = `https://${profile?.username}.devfolio.uz`;
+  const portfolioUrl = `https://${profile?.username}.repospace.uz`;
 
   const handleCopyUrl = async () => {
     try {
@@ -105,11 +107,19 @@ export function SettingsContent({ profile }: SettingsContentProps) {
 
       if (response.ok) {
         setDomainWaitlistJoined(true);
+        setCustomDomain(""); // Clear input after joining
       }
     } catch (error) {
       console.error("Failed to join waitlist:", error);
     } finally {
       setIsJoiningWaitlist(false);
+    }
+  };
+
+  const handleCloseDomainModal = (open: boolean) => {
+    setShowDomainModal(open);
+    if (!open) {
+      setCustomDomain(""); // Clear input when modal closes
     }
   };
 
@@ -151,6 +161,8 @@ export function SettingsContent({ profile }: SettingsContentProps) {
       if (error) throw error;
 
       toast.success(tToast("profileUpdated"));
+      // Refresh to update sidebar with new is_published state
+      router.refresh();
     } catch (error) {
       toast.error(tToast("profileUpdateFailed"));
       console.error(error);
@@ -163,9 +175,7 @@ export function SettingsContent({ profile }: SettingsContentProps) {
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
         <h1 className="text-3xl font-bold font-heading">{t("title")}</h1>
-        <p className="text-muted-foreground mt-1">
-          {t("description")}
-        </p>
+        <p className="text-muted-foreground mt-1">{t("description")}</p>
       </div>
 
       <Form {...form}>
@@ -192,7 +202,7 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                         <span>{t("portfolioStatus.publishDescription")}</span>
                         <span className="inline-flex items-center gap-1.5">
                           <code className="text-xs bg-muted px-1.5 py-0.5 rounded">
-                            {profile?.username}.devfolio.uz
+                            {profile?.username}.repospace.uz
                           </code>
                           <button
                             type="button"
@@ -225,9 +235,7 @@ export function SettingsContent({ profile }: SettingsContentProps) {
           <Card>
             <CardHeader>
               <CardTitle>{t("basicInfo.title")}</CardTitle>
-              <CardDescription>
-                {t("basicInfo.description")}
-              </CardDescription>
+              <CardDescription>{t("basicInfo.description")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -237,7 +245,10 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                   <FormItem>
                     <FormLabel>{t("basicInfo.displayName")}</FormLabel>
                     <FormControl>
-                      <Input placeholder={t("basicInfo.displayNamePlaceholder")} {...field} />
+                      <Input
+                        placeholder={t("basicInfo.displayNamePlaceholder")}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -273,7 +284,10 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                     <FormItem>
                       <FormLabel>{t("basicInfo.location")}</FormLabel>
                       <FormControl>
-                        <Input placeholder={t("basicInfo.locationPlaceholder")} {...field} />
+                        <Input
+                          placeholder={t("basicInfo.locationPlaceholder")}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -287,7 +301,10 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                     <FormItem>
                       <FormLabel>{t("basicInfo.email")}</FormLabel>
                       <FormControl>
-                        <Input placeholder={t("basicInfo.emailPlaceholder")} {...field} />
+                        <Input
+                          placeholder={t("basicInfo.emailPlaceholder")}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -301,9 +318,7 @@ export function SettingsContent({ profile }: SettingsContentProps) {
           <Card>
             <CardHeader>
               <CardTitle>{t("socialLinks.title")}</CardTitle>
-              <CardDescription>
-                {t("socialLinks.description")}
-              </CardDescription>
+              <CardDescription>{t("socialLinks.description")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -348,7 +363,10 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                     <FormItem>
                       <FormLabel>{t("socialLinks.website")}</FormLabel>
                       <FormControl>
-                        <Input placeholder={t("socialLinks.websitePlaceholder")} {...field} />
+                        <Input
+                          placeholder={t("socialLinks.websitePlaceholder")}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -362,7 +380,10 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                     <FormItem>
                       <FormLabel>{t("socialLinks.twitter")}</FormLabel>
                       <FormControl>
-                        <Input placeholder={t("socialLinks.twitterPlaceholder")} {...field} />
+                        <Input
+                          placeholder={t("socialLinks.twitterPlaceholder")}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -374,8 +395,8 @@ export function SettingsContent({ profile }: SettingsContentProps) {
 
           <div className="flex justify-end">
             <Button type="submit" size="lg" disabled={isUpdating}>
-              {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {tCommon("save")}
+              {/* {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} */}
+              {isUpdating ? <>{tCommon("saving")}</> : tCommon("save")}
             </Button>
           </div>
         </form>
@@ -388,9 +409,7 @@ export function SettingsContent({ profile }: SettingsContentProps) {
             <Globe className="h-5 w-5" />
             {t("customDomain.title")}
           </CardTitle>
-          <CardDescription>
-            {t("customDomain.description")}
-          </CardDescription>
+          <CardDescription>{t("customDomain.description")}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex gap-3">
@@ -400,7 +419,10 @@ export function SettingsContent({ profile }: SettingsContentProps) {
               onChange={(e) => setCustomDomain(e.target.value)}
               className="flex-1"
             />
-            <Button onClick={handleConnectDomain} disabled={!customDomain.trim()}>
+            <Button
+              onClick={handleConnectDomain}
+              disabled={!customDomain.trim()}
+            >
               {t("customDomain.connect")}
             </Button>
           </div>
@@ -408,7 +430,7 @@ export function SettingsContent({ profile }: SettingsContentProps) {
       </Card>
 
       {/* Custom Domain Coming Soon Modal */}
-      <Dialog open={showDomainModal} onOpenChange={setShowDomainModal}>
+      <Dialog open={showDomainModal} onOpenChange={handleCloseDomainModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <div className="flex items-center gap-2 text-2xl mb-2">
@@ -434,7 +456,9 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                 disabled={isJoiningWaitlist}
                 className="w-full sm:w-auto"
               >
-                {isJoiningWaitlist && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isJoiningWaitlist && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
                 {t("customDomain.comingSoon.notify")}
               </Button>
             </DialogFooter>

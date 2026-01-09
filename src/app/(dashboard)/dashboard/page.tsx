@@ -41,6 +41,8 @@ export default async function DashboardPage() {
       profile={profile}
       projects={projects || []}
       analytics={analytics || []}
+      githubUsername={profile?.username || ""}
+      userId={user.id}
     />
   );
 }

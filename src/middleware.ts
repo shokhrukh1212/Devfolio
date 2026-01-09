@@ -8,13 +8,14 @@ export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
 
   // Extract subdomain
-  // hostname: "aziz.devfolio.uz" -> subdomain: "aziz"
-  // hostname: "devfolio.uz" -> subdomain: null
+  // hostname: "aziz.repospace.uz" -> subdomain: "aziz"
+  // hostname: "repospace.uz" -> subdomain: null
   // hostname: "localhost:3000" -> subdomain: null
 
-  const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "devfolio.uz";
+  const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "repospace.uz";
   const isLocalhost = hostname.includes("localhost");
-  const isBaseDomain = hostname === baseDomain || hostname === `www.${baseDomain}`;
+  const isBaseDomain =
+    hostname === baseDomain || hostname === `www.${baseDomain}`;
 
   let subdomain: string | null = null;
 
@@ -36,13 +37,20 @@ export async function middleware(request: NextRequest) {
 
   // If subdomain exists, rewrite to portfolio page
   if (subdomain) {
-    url.pathname = `/portfolio/${subdomain}${url.pathname === "/" ? "" : url.pathname}`;
+    url.pathname = `/portfolio/${subdomain}${
+      url.pathname === "/" ? "" : url.pathname
+    }`;
     return NextResponse.rewrite(url);
   }
 
   // Custom domain routing (future feature)
   // If NOT base domain AND NOT subdomain AND NOT localhost, check for custom domain
-  if (!isLocalhost && !isBaseDomain && !subdomain && !hostname.includes(baseDomain)) {
+  if (
+    !isLocalhost &&
+    !isBaseDomain &&
+    !subdomain &&
+    !hostname.includes(baseDomain)
+  ) {
     // Create a Supabase client for the lookup
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -68,7 +76,9 @@ export async function middleware(request: NextRequest) {
       .single();
 
     if (profile?.username) {
-      url.pathname = `/portfolio/${profile.username}${url.pathname === "/" ? "" : url.pathname}`;
+      url.pathname = `/portfolio/${profile.username}${
+        url.pathname === "/" ? "" : url.pathname
+      }`;
       return NextResponse.rewrite(url);
     }
   }

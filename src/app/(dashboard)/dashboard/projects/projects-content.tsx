@@ -38,22 +38,42 @@ import {
   Loader2,
   Pencil,
 } from "lucide-react";
+import { GitHubSyncModal } from "@/components/github-sync-modal";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
-import type { Project } from "@/types";
+import type { Project, PlanTier } from "@/types";
 
 interface ProjectsContentProps {
   initialProjects: Project[];
   userId: string;
   githubUsername: string;
+  planTier?: PlanTier;
+  currentBio?: string | null;
+  currentLocation?: string | null;
 }
 
-export function ProjectsContent({ initialProjects, userId, githubUsername }: ProjectsContentProps) {
+export function ProjectsContent({
+  initialProjects,
+  userId,
+  githubUsername,
+  planTier = "free",
+  currentBio,
+  currentLocation,
+}: ProjectsContentProps) {
   const [projects, setProjects] = useState<Project[]>(initialProjects);
   const [search, setSearch] = useState("");
-  const [syncing, setSyncing] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
-  const [editForm, setEditForm] = useState({ title: "", description: "", demo_url: "" });
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [editForm, setEditForm] = useState({
+    title: "",
+    description: "",
+    demo_url: "",
+  });
+
+  // GitHub sync modal state
+  const [showSyncModal, setShowSyncModal] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+
   const supabase = createClient();
   const t = useTranslations("projects");
   const tCommon = useTranslations("common");
@@ -94,81 +114,23 @@ export function ProjectsContent({ initialProjects, userId, githubUsername }: Pro
     toast.success(tToast("projectDeleted"));
   };
 
-  const handleSync = async () => {
+  const handleSync = () => {
     if (!githubUsername) {
       toast.error(tToast("syncFailed"));
       return;
     }
-
     setSyncing(true);
-    try {
-      // Fetch repos from GitHub API using stored username
-      const response = await fetch(
-        `https://api.github.com/users/${githubUsername}/repos?sort=stars&per_page=30`
-      );
+    setShowSyncModal(true);
+  };
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch repositories");
-      }
+  const handleImportComplete = (newProjects: Project[]) => {
+    setProjects((prev) => [...prev, ...newProjects]);
+    setSyncing(false);
+  };
 
-      const repos = await response.json();
-
-      // Filter out forks and map to project format
-      const newProjects = repos
-        .filter((repo: { fork: boolean }) => !repo.fork)
-        .slice(0, 15)
-        .map((repo: {
-          id: number;
-          name: string;
-          description: string | null;
-          html_url: string;
-          homepage: string | null;
-          stargazers_count: number;
-          forks_count: number;
-          language: string | null;
-          topics: string[];
-        }, index: number) => ({
-          profile_id: userId,
-          github_repo_id: repo.id,
-          title: repo.name,
-          description: repo.description,
-          github_url: repo.html_url,
-          demo_url: repo.homepage,
-          stars: repo.stargazers_count,
-          forks: repo.forks_count,
-          tech_stack: repo.language ? [repo.language, ...(repo.topics || []).slice(0, 3)] : repo.topics?.slice(0, 4) || [],
-          is_visible: true,
-          is_featured: false,
-          display_order: index,
-        }));
-
-      // Upsert projects
-      const { error } = await supabase
-        .from("projects")
-        .upsert(newProjects, {
-          onConflict: "github_repo_id",
-          ignoreDuplicates: false,
-        })
-        .select();
-
-      if (error) throw error;
-
-      // Refresh projects list
-      const { data: refreshedProjects } = await supabase
-        .from("projects")
-        .select("*")
-        .eq("profile_id", userId)
-        .order("display_order", { ascending: true });
-
-      if (refreshedProjects) {
-        setProjects(refreshedProjects);
-      }
-
-      toast.success(tToast("syncSuccess", { count: newProjects.length }));
-    } catch (error) {
-      toast.error(tToast("syncFailed"));
-      console.error(error);
-    } finally {
+  const handleModalClose = (open: boolean) => {
+    setShowSyncModal(open);
+    if (!open) {
       setSyncing(false);
     }
   };
@@ -183,31 +145,41 @@ export function ProjectsContent({ initialProjects, userId, githubUsername }: Pro
   };
 
   const handleSaveEdit = async () => {
-    if (!editingProject) return;
+    if (!editingProject || savingEdit) return;
 
-    const { error } = await supabase
-      .from("projects")
-      .update({
-        title: editForm.title,
-        description: editForm.description || null,
-        demo_url: editForm.demo_url || null,
-      })
-      .eq("id", editingProject.id);
+    setSavingEdit(true);
+    try {
+      const { error } = await supabase
+        .from("projects")
+        .update({
+          title: editForm.title,
+          description: editForm.description || null,
+          demo_url: editForm.demo_url || null,
+        })
+        .eq("id", editingProject.id);
 
-    if (error) {
-      toast.error(tToast("projectUpdateFailed"));
-      return;
+      if (error) {
+        toast.error(tToast("projectUpdateFailed"));
+        return;
+      }
+
+      setProjects((prev) =>
+        prev.map((p) =>
+          p.id === editingProject.id
+            ? {
+                ...p,
+                title: editForm.title,
+                description: editForm.description || null,
+                demo_url: editForm.demo_url || null,
+              }
+            : p
+        )
+      );
+      toast.success(tToast("projectUpdated"));
+      setEditingProject(null);
+    } finally {
+      setSavingEdit(false);
     }
-
-    setProjects((prev) =>
-      prev.map((p) =>
-        p.id === editingProject.id
-          ? { ...p, title: editForm.title, description: editForm.description || null, demo_url: editForm.demo_url || null }
-          : p
-      )
-    );
-    toast.success(tToast("projectUpdated"));
-    setEditingProject(null);
   };
 
   return (
@@ -215,9 +187,7 @@ export function ProjectsContent({ initialProjects, userId, githubUsername }: Pro
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold font-heading">{t("title")}</h1>
-          <p className="text-muted-foreground mt-1">
-            {t("description")}
-          </p>
+          <p className="text-muted-foreground mt-1">{t("description")}</p>
         </div>
         <Button onClick={handleSync} disabled={syncing}>
           {syncing ? (
@@ -245,9 +215,7 @@ export function ProjectsContent({ initialProjects, userId, githubUsername }: Pro
         <div className="text-center py-20 bg-muted/30 rounded-xl border border-dashed">
           <Github className="w-12 h-12 mx-auto text-muted-foreground opacity-50 mb-4" />
           <h3 className="text-lg font-medium">{t("noProjectsFound")}</h3>
-          <p className="text-muted-foreground mb-6">
-            {t("syncToGetStarted")}
-          </p>
+          <p className="text-muted-foreground mb-6">{t("syncToGetStarted")}</p>
           <Button onClick={handleSync} disabled={syncing}>
             {syncing ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -281,7 +249,8 @@ export function ProjectsContent({ initialProjects, userId, githubUsername }: Pro
                         variant="secondary"
                         className="font-normal text-muted-foreground"
                       >
-                        {project.stars || 0} {t("stars")}
+                        {project.stars || 0}{" "}
+                        {project.stars < 2 ? "star" : "stars"}
                       </Badge>
                       {project.is_featured && (
                         <Badge
@@ -316,7 +285,7 @@ export function ProjectsContent({ initialProjects, userId, githubUsername }: Pro
                           rel="noreferrer"
                           className="flex items-center hover:text-foreground"
                         >
-                          <Github className="w-3.5 h-3.5 mr-1.5" /> {t("code")}
+                          <Github className="w-3.5 h-3.5 mr-1.5" /> {"Code"}
                         </a>
                       )}
                       {project.demo_url && (
@@ -326,12 +295,13 @@ export function ProjectsContent({ initialProjects, userId, githubUsername }: Pro
                           rel="noreferrer"
                           className="flex items-center hover:text-foreground"
                         >
-                          <ExternalLink className="w-3.5 h-3.5 mr-1.5" /> {t("demo")}
+                          <ExternalLink className="w-3.5 h-3.5 mr-1.5" />{" "}
+                          {"Demo"}
                         </a>
                       )}
                       <span className="flex items-center">
-                        <GitFork className="w-3.5 h-3.5 mr-1.5" /> {project.forks}{" "}
-                        {t("forks")}
+                        <GitFork className="w-3.5 h-3.5 mr-1.5" />{" "}
+                        {project.forks} {project.forks < 2 ? "fork" : "forks"}
                       </span>
                     </div>
                   </div>
@@ -344,7 +314,9 @@ export function ProjectsContent({ initialProjects, userId, githubUsername }: Pro
                       <Switch
                         checked={project.is_visible}
                         onCheckedChange={(checked) =>
-                          handleUpdateProject(project.id, { is_visible: checked })
+                          handleUpdateProject(project.id, {
+                            is_visible: checked,
+                          })
                         }
                       />
                     </div>
@@ -356,7 +328,9 @@ export function ProjectsContent({ initialProjects, userId, githubUsername }: Pro
                       <Switch
                         checked={project.is_featured}
                         onCheckedChange={(checked) =>
-                          handleUpdateProject(project.id, { is_featured: checked })
+                          handleUpdateProject(project.id, {
+                            is_featured: checked,
+                          })
                         }
                       />
                     </div>
@@ -383,7 +357,9 @@ export function ProjectsContent({ initialProjects, userId, githubUsername }: Pro
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                          <AlertDialogCancel>{tCommon("cancel")}</AlertDialogCancel>
+                          <AlertDialogCancel>
+                            {tCommon("cancel")}
+                          </AlertDialogCancel>
                           <AlertDialogAction
                             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                             onClick={() => handleDeleteProject(project.id)}
@@ -402,13 +378,14 @@ export function ProjectsContent({ initialProjects, userId, githubUsername }: Pro
       )}
 
       {/* Edit Project Dialog */}
-      <Dialog open={!!editingProject} onOpenChange={(open) => !open && setEditingProject(null)}>
+      <Dialog
+        open={!!editingProject}
+        onOpenChange={(open) => !open && setEditingProject(null)}
+      >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t("edit.title")}</DialogTitle>
-            <DialogDescription>
-              {t("edit.description")}
-            </DialogDescription>
+            <DialogDescription>{t("edit.description")}</DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
@@ -417,15 +394,21 @@ export function ProjectsContent({ initialProjects, userId, githubUsername }: Pro
               <Input
                 id="title"
                 value={editForm.title}
-                onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, title: e.target.value })
+                }
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="description">{t("edit.projectDescription")}</Label>
+              <Label htmlFor="description">
+                {t("edit.projectDescription")}
+              </Label>
               <Textarea
                 id="description"
                 value={editForm.description}
-                onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, description: e.target.value })
+                }
                 className="resize-none min-h-[100px]"
               />
             </div>
@@ -435,21 +418,40 @@ export function ProjectsContent({ initialProjects, userId, githubUsername }: Pro
                 id="demo_url"
                 placeholder="https://..."
                 value={editForm.demo_url}
-                onChange={(e) => setEditForm({ ...editForm, demo_url: e.target.value })}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, demo_url: e.target.value })
+                }
               />
             </div>
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingProject(null)}>
+            <Button
+              variant="outline"
+              onClick={() => setEditingProject(null)}
+              disabled={savingEdit}
+            >
               {tCommon("cancel")}
             </Button>
-            <Button onClick={handleSaveEdit}>
-              {tCommon("save")}
+            <Button onClick={handleSaveEdit} disabled={savingEdit}>
+              {savingEdit ? <>{tCommon("saving")}</> : tCommon("save")}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* GitHub Sync Modal */}
+      <GitHubSyncModal
+        open={showSyncModal}
+        onOpenChange={handleModalClose}
+        githubUsername={githubUsername}
+        userId={userId}
+        existingProjects={projects}
+        planTier={planTier}
+        currentBio={currentBio}
+        currentLocation={currentLocation}
+        onImportComplete={handleImportComplete}
+      />
     </div>
   );
 }

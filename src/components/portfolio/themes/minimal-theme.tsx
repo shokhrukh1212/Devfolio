@@ -2,23 +2,30 @@
 
 import { useEffect } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { Github, Globe, Linkedin, Mail, MapPin } from "lucide-react";
 import { useAnalytics } from "@/hooks/use-analytics";
 import type { ThemeProps } from "@/types";
 
-export function MinimalTheme({ profile, projects, isOwner, isPreview, geoCountry }: ThemeProps) {
+export function MinimalTheme({
+  profile,
+  projects,
+  isOwner,
+  isPreview,
+  visitorCountry,
+  visitorCity,
+  serverReferrer,
+}: ThemeProps) {
   // Analytics tracking
-  const {
-    trackPageView,
-    trackGitHubClick,
-    trackDemoClick,
-    trackSocialClick,
-  } = useAnalytics({
-    profileId: profile.id,
-    isOwner,
-    isPreview,
-    geoCountry,
-  });
+  const { trackPageView, trackGitHubClick, trackDemoClick, trackSocialClick } =
+    useAnalytics({
+      profileId: profile.id,
+      isOwner,
+      isPreview,
+      visitorCountry,
+      visitorCity,
+      serverReferrer,
+    });
 
   // Track page view on mount
   useEffect(() => {
@@ -39,10 +46,16 @@ export function MinimalTheme({ profile, projects, isOwner, isPreview, geoCountry
 
   const visibleProjects = projects
     .filter((p) => p.is_visible)
-    .sort((a, b) => a.display_order - b.display_order);
+    .sort((a, b) => {
+      // Featured projects first
+      if (a.is_featured && !b.is_featured) return -1;
+      if (!a.is_featured && b.is_featured) return 1;
+      // Then by display_order
+      return a.display_order - b.display_order;
+    });
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-900 selection:text-white">
+    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-foreground selection:text-background">
       <div className="max-w-3xl mx-auto px-6 py-24">
         <motion.div
           initial="hidden"
@@ -54,9 +67,11 @@ export function MinimalTheme({ profile, projects, isOwner, isPreview, geoCountry
           <motion.header variants={item} className="space-y-6">
             <div className="flex items-center gap-6">
               {profile.avatar_url && (
-                <img
+                <Image
                   src={profile.avatar_url}
                   alt={profile.display_name || "Avatar"}
+                  width={80}
+                  height={80}
                   className="w-20 h-20 rounded-full object-cover grayscale"
                 />
               )}
@@ -65,7 +80,7 @@ export function MinimalTheme({ profile, projects, isOwner, isPreview, geoCountry
                   {profile.display_name || profile.username}
                 </h1>
                 {profile.location && (
-                  <p className="flex items-center text-zinc-500 mt-2">
+                  <p className="flex items-center text-muted-foreground mt-2">
                     <MapPin className="w-4 h-4 mr-1" />
                     {profile.location}
                   </p>
@@ -73,7 +88,7 @@ export function MinimalTheme({ profile, projects, isOwner, isPreview, geoCountry
               </div>
             </div>
 
-            <p className="text-xl text-zinc-600 leading-relaxed max-w-2xl">
+            <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
               {profile.bio}
             </p>
 
@@ -84,7 +99,7 @@ export function MinimalTheme({ profile, projects, isOwner, isPreview, geoCountry
                   target="_blank"
                   rel="noreferrer"
                   onClick={() => trackSocialClick("github")}
-                  className="p-2 rounded-full hover:bg-zinc-100 transition-colors"
+                  className="p-2 rounded-full hover:bg-muted transition-colors"
                 >
                   <Github className="w-5 h-5" />
                 </a>
@@ -95,7 +110,7 @@ export function MinimalTheme({ profile, projects, isOwner, isPreview, geoCountry
                   target="_blank"
                   rel="noreferrer"
                   onClick={() => trackSocialClick("linkedin")}
-                  className="p-2 rounded-full hover:bg-zinc-100 transition-colors"
+                  className="p-2 rounded-full hover:bg-muted transition-colors"
                 >
                   <Linkedin className="w-5 h-5" />
                 </a>
@@ -106,7 +121,7 @@ export function MinimalTheme({ profile, projects, isOwner, isPreview, geoCountry
                   target="_blank"
                   rel="noreferrer"
                   onClick={() => trackSocialClick("website")}
-                  className="p-2 rounded-full hover:bg-zinc-100 transition-colors"
+                  className="p-2 rounded-full hover:bg-muted transition-colors"
                 >
                   <Globe className="w-5 h-5" />
                 </a>
@@ -115,7 +130,7 @@ export function MinimalTheme({ profile, projects, isOwner, isPreview, geoCountry
                 <a
                   href={`mailto:${profile.email}`}
                   onClick={() => trackSocialClick("email")}
-                  className="p-2 rounded-full hover:bg-zinc-100 transition-colors"
+                  className="p-2 rounded-full hover:bg-muted transition-colors"
                 >
                   <Mail className="w-5 h-5" />
                 </a>
@@ -123,20 +138,24 @@ export function MinimalTheme({ profile, projects, isOwner, isPreview, geoCountry
             </div>
           </motion.header>
 
-          <div className="h-px bg-zinc-100 w-full" />
+          <div className="h-px bg-border w-full" />
 
           {/* Projects */}
           <section className="space-y-12">
             <motion.h2
               variants={item}
-              className="text-sm font-semibold uppercase tracking-wider text-zinc-400"
+              className="text-sm font-semibold uppercase tracking-wider text-muted-foreground"
             >
               Selected Projects
             </motion.h2>
 
             <div className="grid gap-12">
               {visibleProjects.map((project) => (
-                <motion.article key={project.id} variants={item} className="group">
+                <motion.article
+                  key={project.id}
+                  variants={item}
+                  className="group"
+                >
                   <div className="flex justify-between items-baseline mb-2">
                     <h3 className="text-2xl font-semibold group-hover:underline decoration-1 underline-offset-4">
                       {project.title}
@@ -147,8 +166,10 @@ export function MinimalTheme({ profile, projects, isOwner, isPreview, geoCountry
                           href={project.demo_url}
                           target="_blank"
                           rel="noreferrer"
-                          onClick={() => trackDemoClick(project.id, project.title)}
-                          className="text-sm font-medium hover:text-zinc-500"
+                          onClick={() =>
+                            trackDemoClick(project.id, project.title)
+                          }
+                          className="text-sm font-medium hover:text-muted-foreground"
                         >
                           View Demo ↗
                         </a>
@@ -158,8 +179,10 @@ export function MinimalTheme({ profile, projects, isOwner, isPreview, geoCountry
                           href={project.github_url}
                           target="_blank"
                           rel="noreferrer"
-                          onClick={() => trackGitHubClick(project.id, project.title)}
-                          className="text-sm font-medium hover:text-zinc-500"
+                          onClick={() =>
+                            trackGitHubClick(project.id, project.title)
+                          }
+                          className="text-sm font-medium hover:text-muted-foreground"
                         >
                           Code ↗
                         </a>
@@ -167,7 +190,7 @@ export function MinimalTheme({ profile, projects, isOwner, isPreview, geoCountry
                     </div>
                   </div>
 
-                  <p className="text-zinc-600 mb-4 leading-relaxed">
+                  <p className="text-muted-foreground mb-4 leading-relaxed">
                     {project.description}
                   </p>
 
@@ -175,7 +198,7 @@ export function MinimalTheme({ profile, projects, isOwner, isPreview, geoCountry
                     {project.tech_stack?.map((tech) => (
                       <span
                         key={tech}
-                        className="text-xs font-medium text-zinc-400 bg-zinc-50 px-2 py-1 rounded"
+                        className="text-xs font-medium text-muted-foreground bg-muted px-2 py-1 rounded"
                       >
                         {tech}
                       </span>
@@ -188,11 +211,11 @@ export function MinimalTheme({ profile, projects, isOwner, isPreview, geoCountry
 
           <motion.footer
             variants={item}
-            className="pt-24 pb-12 text-center text-sm text-zinc-400"
+            className="text-center text-sm text-muted-foreground"
           >
             <p>
               © {new Date().getFullYear()} {profile.display_name}. Built with
-              Devfolio.
+              RepoSpace.
             </p>
           </motion.footer>
         </motion.div>

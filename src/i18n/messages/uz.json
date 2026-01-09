@@ -3,16 +3,18 @@
     "signIn": "Kirish",
     "signOut": "Chiqish",
     "save": "Saqlash",
+    "saving": "Saqlanmoqda...",
     "cancel": "Bekor qilish",
     "delete": "O'chirish",
     "loading": "Yuklanmoqda...",
     "search": "Qidirish",
-    "devfolio": "Devfolio"
+    "devfolio": "RepoSpace",
+    "feedback": "Fikr-mulohaza"
   },
   "landing": {
     "hero": {
-      "badge": "60 soniyada portfolio yarating",
-      "title": "GitHub \u2192 Portfolio \u2192 Ulashing",
+      "badge": "Bir daqiqada tayyor portfolio.",
+      "title": "GitHub \u2192 Portfolio \u2192 Ish beruvchilarga ko'rsating",
       "description": "GitHub profilingizni chiroyli dasturchi portfoliosiga aylantiring. Dizayn ko'nikmalari shart emas. Mavzuni tanlang, loyihalaringizni import qiling va darhol jonlantiring."
     },
     "cta": {
@@ -22,23 +24,23 @@
     "features": {
       "quickSetup": {
         "title": "Tez sozlash",
-        "description": "GitHub bilan kiring, eng yaxshi loyihalaringizni tanlang va portfolioingiz bir daqiqadan kamroq vaqtda tayyor."
+        "description": "1 daqiqada ishga tayyor"
       },
       "themes": {
         "title": "3 ta chiroyli mavzu",
-        "description": "Minimal, Bento Grid yoki Terminal Dark dan tanlang. Har bir mavzu mobil qurilmalarga moslashgan va SEO-tayyor."
+        "description": "Mobil va SEO uchun moslangan"
       },
       "subdomain": {
         "title": "Bepul subdomen",
-        "description": "username.devfolio.uz manzilida o'z portfolioingizga ega bo'ling. Maxsus domenlar tez orada."
+        "description": "Darhol ulashish mumkin"
       }
     },
     "ctaSection": {
-      "title": "Portfolioingizni yaratishga tayyormisiz?",
-      "description": "Devfolio yordamida ishlarini namoyish qilayotgan va imkoniyatlarni qo'lga kiritayotgan dasturchilarga qo'shiling."
+      "title": "Birinchi portfolioingizni bugun yarating",
+      "description": "RepoSpace yordamida ishlarini namoyish qilayotgan va imkoniyatlarni qo'lga kiritayotgan dasturchilarga qo'shiling."
     },
     "footer": {
-      "copyright": "\u00a9 {year} Devfolio. Barcha huquqlar himoyalangan."
+      "copyright": "\u00a9 {year} RepoSpace. Barcha huquqlar himoyalangan."
     }
   },
   "login": {
@@ -46,25 +48,25 @@
     "title": "Xush kelibsiz",
     "description": "Bir necha daqiqada dasturchi portfolioingizni yarating",
     "continueWithGithub": "GitHub bilan davom etish",
-    "terms": "Davom etish orqali Foydalanish shartlariga rozilik bildirasiz",
     "quickSetup": "Tez sozlash",
     "themes": "3 ta mavzu",
     "freeSubdomain": "Bepul subdomen"
   },
   "dashboard": {
     "sidebar": {
-      "buildShowcase": "Namoyishingizni yarating",
+      "buildShowcase": "Professional portfoliongizni yarating",
       "overview": "Umumiy ko'rinish",
       "projects": "Loyihalar",
       "profile": "Profil",
       "theme": "Mavzu",
       "viewPortfolio": "Portfolioni ko'rish",
+      "helpFeedback": "Yordam va fikr-mulohaza",
       "manageAccount": "Hisobni boshqarish",
       "signOut": "Chiqish"
     },
     "overview": {
       "welcome": "Xush kelibsiz, {name}",
-      "subtitle": "Bugun portfolioingizda nima sodir bo'layotgani.",
+      "subtitle": "Bugun Portfoliongizda yuz berayotgan o‘zgarishlar bilan tanishing.",
       "manageProjects": "Loyihalarni boshqarish",
       "totalProjects": "Jami loyihalar",
       "currentlyVisible": "{count} ta hozirda ko'rinadi",
@@ -74,15 +76,15 @@
       "lastDays": "Oxirgi 7 kun",
       "visitorActivity": "Tashrif buyuruvchilar faoliyati",
       "viewsOverDays": "Oxirgi 7 kundagi ko'rishlar",
-      "shareYourPortfolio": "Portfolioingizni ulashing",
+      "shareYourPortfolio": "Portfoliongizni ulashing",
       "copyLink": "Havolani nusxalash",
       "copied": "Nusxalandi!",
       "comingSoonPro": "Tez orada Pro da",
       "proFeatureDescription": "Pro bilan batafsil tahlilni oching",
       "topLocations": "Tashrif buyuruvchilar joylashuvi",
-      "topLocationsDescription": "Tashrif buyuruvchilaringiz qayerdan kelmoqda",
+      "topLocationsDescription": "Tashrif buyuruvchilaringiz qaysi mamlakatlardan (yoki shaharlardan) ekanligini bilib oling.",
       "topSources": "Trafik manbalari",
-      "topSourcesDescription": "Tashrif buyuruvchilaringiz qayerdan kelgan",
+      "topSourcesDescription": "Tashrif buyuruvchilaringiz qaysi platformalar (masalan, Google, ijtimoiy tarmoqlar) orqali kirganini ko'ring.",
       "unlockData": "Ma'lumotlarni ochish",
       "onWaitlist": "Siz kutish ro'yxatidasiz!"
     },
@@ -98,7 +100,7 @@
   },
   "projects": {
     "title": "Loyihalar",
-    "description": "Portfolioingizda qaysi repozitoriyalar ko'rinishini boshqaring.",
+    "description": "Portfoliongizda qaysi repozitoriyalar ko'rinishini boshqaring.",
     "syncFromGithub": "GitHub dan sinxronlash",
     "searchPlaceholder": "Loyihalarni qidirish...",
     "noProjectsFound": "Loyihalar topilmadi",
@@ -129,12 +131,34 @@
       "demoUrl": "Demo URL"
     }
   },
+  "githubSync": {
+    "title": "Import qilish uchun loyihalarni tanlang",
+    "loading": "Repozitoriyalaringiz yuklanmoqda...",
+    "reposFound": "{count} ta repozitoriya topildi. Portfoliongizga qo'shish uchun tanlang.",
+    "excludeForks": "Forklarni chiqarib tashlash",
+    "excludeArchived": "Arxivlanganlarni chiqarib tashlash",
+    "sort": "Saralash",
+    "mostStars": "Eng ko'p yulduz",
+    "newest": "Eng yangi",
+    "selectAll": "Hammasini tanlash",
+    "deselectAll": "Tanlovni bekor qilish",
+    "limitReached": "Chegaraga yetildi ({max}/{max})",
+    "selectedCount": "{selected} ta tanlandi ({remaining} ta joy qoldi)",
+    "alreadyInPortfolio": "Portfolioda mavjud",
+    "fork": "Fork",
+    "archived": "Arxivlangan",
+    "cancel": "Bekor qilish",
+    "skipImport": "Importni o'tkazib yuborish",
+    "importProjects": "{count} ta loyihani import qilish",
+    "canOnlyImport": "Faqat {count} ta loyiha import qilish mumkin",
+    "noNewProjects": "Import qilish uchun yangi loyihalar yo'q"
+  },
   "settings": {
     "title": "Profil sozlamalari",
-    "description": "Bu ma'lumot ochiq portfolioingizda ko'rsatiladi.",
+    "description": "Bu ma'lumot ochiq portfoliongizda ko'rsatiladi.",
     "portfolioStatus": {
       "title": "Portfolio holati",
-      "description": "Portfolioingiz ommaviy ko'rinishini boshqaring.",
+      "description": "Portfoliongiz ommaviy ko'rinishini boshqaring.",
       "publishLabel": "Portfolioni nashr qilish",
       "publishDescription": "Yoqilganda, portfolioingiz quyidagi manzilda ko'rinadi"
     },
@@ -149,7 +173,7 @@
       "bioDescription": "O'zingiz haqingizda qisqacha tavsif.",
       "location": "Joylashuv",
       "locationPlaceholder": "Toshkent, O'zbekiston",
-      "email": "Aloqa elektron pochtasi",
+      "email": "Elektron pochta manzili",
       "emailPlaceholder": "salom@misol.com"
     },
     "socialLinks": {
@@ -213,7 +237,26 @@
     "syncSuccess": "GitHub dan {count} ta loyiha sinxronlandi",
     "syncFailed": "Loyihalarni sinxronlashda xatolik",
     "urlCopied": "Portfolio URL nusxalandi",
-    "copyFailed": "URL ni nusxalashda xatolik"
+    "copyFailed": "URL ni nusxalashda xatolik",
+    "portfolioNotPublished": "Sizning portfoliongiz hozir yashirin. Uni ko'rish uchun sozlamalarda 'Nashr qilish'ni yoqing.",
+    "feedbackSubmitted": "Fikr-mulohazangiz uchun rahmat!",
+    "feedbackSubmitFailed": "Fikr-mulohazani yuborishda xatolik",
+    "feedbackRequired": "Iltimos, turini tanlang va fikr-mulohazangizni kiriting"
+  },
+  "feedback": {
+    "title": "Qanday yaxshilashimiz mumkin?",
+    "description": "Sizning fikrlaringiz va takliflaringizni eshitishdan xursand bo'lamiz.",
+    "typeLabel": "Tur",
+    "typePlaceholder": "Fikr-mulohaza turini tanlang",
+    "typeBug": "Xatolik",
+    "typeFeature": "Funksiya so'rovi",
+    "typeOther": "Boshqa",
+    "messageLabel": "Xabar",
+    "messagePlaceholder": "Men loyihalar sahifasida xatolik topdim...",
+    "cancel": "Bekor qilish",
+    "submit": "Fikr-mulohazani yuborish",
+    "sending": "Yuborilmoqda...",
+    "emailNote": "Agar qo'shimcha savollar tug'ilsa, biz siz bilan ({email}) orqali bog'lanamiz."
   },
   "theme": {
     "light": "Yorug'",
@@ -228,5 +271,10 @@
   },
   "validation": {
     "displayNameRequired": "Ko'rsatiladigan ism talab qilinadi"
+  },
+  "notFound": {
+    "title": "Sahifa topilmadi",
+    "description": "Siz qidirayotgan sahifa mavjud emas yoki ko'chirilgan.",
+    "returnHome": "Bosh sahifaga qaytish"
   }
 }

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Github, Sparkles, Zap, Globe, ArrowRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { LanguageSelector } from "@/components/language-selector";
+import { Logo } from "@/components/ui/logo";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -23,9 +24,7 @@ export default async function HomePage() {
       {/* Header */}
       <header className="border-b border-border">
         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-            {t("common.devfolio")}
-          </h1>
+          <Logo size="sm" />
           <div className="flex items-center gap-2">
             <LanguageSelector />
             <Link href="/login">
@@ -69,7 +68,9 @@ export default async function HomePage() {
             <div className="mx-auto w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
               <Zap className="h-7 w-7 text-primary" />
             </div>
-            <h3 className="text-xl font-semibold">{t("landing.features.quickSetup.title")}</h3>
+            <h3 className="text-xl font-semibold">
+              {t("landing.features.quickSetup.title")}
+            </h3>
             <p className="text-muted-foreground">
               {t("landing.features.quickSetup.description")}
             </p>
@@ -79,7 +80,9 @@ export default async function HomePage() {
             <div className="mx-auto w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
               <Sparkles className="h-7 w-7 text-primary" />
             </div>
-            <h3 className="text-xl font-semibold">{t("landing.features.themes.title")}</h3>
+            <h3 className="text-xl font-semibold">
+              {t("landing.features.themes.title")}
+            </h3>
             <p className="text-muted-foreground">
               {t("landing.features.themes.description")}
             </p>
@@ -89,7 +92,9 @@ export default async function HomePage() {
             <div className="mx-auto w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
               <Globe className="h-7 w-7 text-primary" />
             </div>
-            <h3 className="text-xl font-semibold">{t("landing.features.subdomain.title")}</h3>
+            <h3 className="text-xl font-semibold">
+              {t("landing.features.subdomain.title")}
+            </h3>
             <p className="text-muted-foreground">
               {t("landing.features.subdomain.description")}
             </p>
@@ -106,7 +111,8 @@ export default async function HomePage() {
           </p>
           <Link href="/login">
             <Button size="lg">
-              {t("landing.cta.startBuilding")} <ArrowRight className="ml-2 h-4 w-4" />
+              {t("landing.cta.startBuilding")}{" "}
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>
         </div>
@@ -115,7 +121,9 @@ export default async function HomePage() {
       {/* Footer */}
       <footer className="border-t border-border mt-20">
         <div className="max-w-6xl mx-auto px-4 py-8 text-center text-sm text-muted-foreground">
-          <p>{t("landing.footer.copyright", { year: new Date().getFullYear() })}</p>
+          <p>
+            {t("landing.footer.copyright", { year: new Date().getFullYear() })}
+          </p>
         </div>
       </footer>
     </div>

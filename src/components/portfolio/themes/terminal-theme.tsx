@@ -5,22 +5,28 @@ import { useEffect, useState } from "react";
 import { useAnalytics } from "@/hooks/use-analytics";
 import type { ThemeProps } from "@/types";
 
-export function TerminalTheme({ profile, projects, isOwner, isPreview, geoCountry }: ThemeProps) {
+export function TerminalTheme({
+  profile,
+  projects,
+  isOwner,
+  isPreview,
+  visitorCountry,
+  visitorCity,
+  serverReferrer,
+}: ThemeProps) {
   const [typedText, setTypedText] = useState("");
   const fullText = `> Initializing profile for ${profile.username}...\n> Loading modules... DONE\n> Rendering bio...`;
 
   // Analytics tracking
-  const {
-    trackPageView,
-    trackGitHubClick,
-    trackDemoClick,
-    trackSocialClick,
-  } = useAnalytics({
-    profileId: profile.id,
-    isOwner,
-    isPreview,
-    geoCountry,
-  });
+  const { trackPageView, trackGitHubClick, trackDemoClick, trackSocialClick } =
+    useAnalytics({
+      profileId: profile.id,
+      isOwner,
+      isPreview,
+      visitorCountry,
+      visitorCity,
+      serverReferrer,
+    });
 
   // Track page view on mount
   useEffect(() => {
@@ -39,7 +45,13 @@ export function TerminalTheme({ profile, projects, isOwner, isPreview, geoCountr
 
   const visibleProjects = projects
     .filter((p) => p.is_visible)
-    .sort((a, b) => a.display_order - b.display_order);
+    .sort((a, b) => {
+      // Featured projects first
+      if (a.is_featured && !b.is_featured) return -1;
+      if (!a.is_featured && b.is_featured) return 1;
+      // Then by display_order
+      return a.display_order - b.display_order;
+    });
 
   return (
     <div className="min-h-screen bg-[#0d1117] text-[#58a6ff] font-mono p-6 md:p-12 overflow-x-hidden">
@@ -153,7 +165,9 @@ export function TerminalTheme({ profile, projects, isOwner, isPreview, geoCountr
                         href={project.demo_url}
                         target="_blank"
                         rel="noreferrer"
-                        onClick={() => trackDemoClick(project.id, project.title)}
+                        onClick={() =>
+                          trackDemoClick(project.id, project.title)
+                        }
                         className="text-[#2ea043] hover:underline"
                       >
                         ./view-demo.sh
@@ -164,7 +178,9 @@ export function TerminalTheme({ profile, projects, isOwner, isPreview, geoCountr
                         href={project.github_url}
                         target="_blank"
                         rel="noreferrer"
-                        onClick={() => trackGitHubClick(project.id, project.title)}
+                        onClick={() =>
+                          trackGitHubClick(project.id, project.title)
+                        }
                         className="text-[#d2a8ff] hover:underline"
                       >
                         ./view-source.sh
@@ -179,7 +195,7 @@ export function TerminalTheme({ profile, projects, isOwner, isPreview, geoCountr
           {/* Footer */}
           <div className="text-center text-[#8b949e] text-sm pt-8">
             <span className="text-[#ff7b72]">$</span> echo &quot;Built with
-            Devfolio&quot;
+            RepoSpace&quot;
           </div>
         </div>
       </div>
