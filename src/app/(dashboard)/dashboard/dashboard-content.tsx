@@ -81,8 +81,11 @@ export function DashboardContent({
   // Group analytics by day for chart
   const analyticsData = getAnalyticsChartData(analytics);
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://repospace.vercel.app";
+  const appUrl =
+    process.env.NEXT_PUBLIC_APP_URL || "https://repospace.vercel.app";
   const portfolioUrl = `${appUrl}/portfolio/${profile?.username}`;
+  const displayUrl = appUrl.replace(/^https?:\/\//, "");
+  const portfolioUrlTitle = `${displayUrl}/${profile?.username}`;
 
   const handleCopyUrl = async () => {
     try {
@@ -124,7 +127,9 @@ export function DashboardContent({
               </div>
               <div>
                 <p className="font-medium text-sm">{t("shareYourPortfolio")}</p>
-                <p className="text-muted-foreground text-sm">{portfolioUrl}</p>
+                <p className="text-muted-foreground text-sm">
+                  {portfolioUrlTitle}
+                </p>
               </div>
             </div>
             <Button
