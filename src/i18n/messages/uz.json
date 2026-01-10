@@ -151,7 +151,14 @@
     "skipImport": "Importni o'tkazib yuborish",
     "importProjects": "{count} ta loyihani import qilish",
     "canOnlyImport": "Faqat {count} ta loyiha import qilish mumkin",
-    "noNewProjects": "Import qilish uchun yangi loyihalar yo'q"
+    "noNewProjects": "Import qilish uchun yangi loyihalar yo'q",
+    "noRepositories": "Repository topilmadi",
+    "noRepositoriesHint": "GitHub'da repository yarating va uni portfolioga qo'shing.",
+    "rateLimitTitle": "GitHub API cheklovi",
+    "rateLimitDescription": "GitHub'ga juda ko'p so'rov yuborildi. Bir necha daqiqa kutib, qaytadan urinib ko'ring.",
+    "fetchErrorTitle": "Repozitoriyalarni yuklashda xatolik",
+    "fetchErrorDescription": "GitHub'dan repozitoriyalaringizni olib bo'lmadi. Internet ulanishingizni tekshiring va qaytadan urinib ko'ring.",
+    "tryAgain": "Qaytadan urinish"
   },
   "settings": {
     "title": "Profil sozlamalari",

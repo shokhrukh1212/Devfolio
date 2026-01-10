@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -76,7 +76,7 @@ export function GitHubSyncModal({
 }: GitHubSyncModalProps) {
   const t = useTranslations("githubSync");
   const tToast = useTranslations("toast");
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   const [fetchedRepos, setFetchedRepos] = useState<GitHubRepo[]>([]);
   const [selectedRepos, setSelectedRepos] = useState<Set<number>>(new Set());
@@ -85,6 +85,7 @@ export function GitHubSyncModal({
   const [sortBy, setSortBy] = useState<"stars" | "newest">("stars");
   const [loading, setLoading] = useState(false);
   const [importing, setImporting] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   // Plan limits
   const maxProjects = PLAN_LIMITS[planTier] || 10;
@@ -92,9 +93,10 @@ export function GitHubSyncModal({
   const availableSlots = Math.max(0, maxProjects - usedSlots);
   const totalSelected = usedSlots + selectedRepos.size;
 
-  // Get existing repo IDs to identify "Already in Portfolio"
-  const existingRepoIds = new Set(
-    existingProjects.map((p) => p.github_repo_id).filter(Boolean)
+  // Memoize existing repo IDs to prevent infinite re-renders
+  const existingRepoIds = useMemo(
+    () => new Set(existingProjects.map((p) => p.github_repo_id).filter(Boolean)),
+    [existingProjects]
   );
 
   // Fetch repos when modal opens
@@ -102,6 +104,7 @@ export function GitHubSyncModal({
     if (!githubUsername || fetchedRepos.length > 0) return;
 
     setLoading(true);
+    setFetchError(null);
     try {
       // Fetch user profile to get bio and location
       const userResponse = await fetch(
@@ -130,6 +133,9 @@ export function GitHubSyncModal({
       );
 
       if (!response.ok) {
+        if (response.status === 403) {
+          throw new Error("rate_limit");
+        }
         throw new Error("Failed to fetch repositories");
       }
 
@@ -146,9 +152,13 @@ export function GitHubSyncModal({
       );
       setSelectedRepos(initialSelected);
     } catch (error) {
-      toast.error(tToast("syncFailed"));
+      const errorMessage = error instanceof Error ? error.message : "unknown";
+      if (errorMessage === "rate_limit") {
+        setFetchError("rate_limit");
+      } else {
+        setFetchError("fetch_failed");
+      }
       console.error(error);
-      onOpenChange(false);
     } finally {
       setLoading(false);
     }
@@ -158,10 +168,9 @@ export function GitHubSyncModal({
     currentBio,
     currentLocation,
     existingRepoIds,
+    availableSlots,
     supabase,
     userId,
-    tToast,
-    onOpenChange,
   ]);
 
   useEffect(() => {
@@ -175,11 +184,12 @@ export function GitHubSyncModal({
     if (!open) {
       setFetchedRepos([]);
       setSelectedRepos(new Set());
+      setFetchError(null);
     }
   }, [open]);
 
   // Get filtered and sorted repos for the modal
-  const getFilteredRepos = () => {
+  const filteredRepos = useMemo(() => {
     let filtered = [...fetchedRepos];
     if (excludeForks) {
       filtered = filtered.filter((r) => !r.fork);
@@ -196,10 +206,7 @@ export function GitHubSyncModal({
       );
     }
     return filtered;
-  };
-
-  // Calculate remaining slots (considering already selected)
-  const slotsLeft = availableSlots - selectedRepos.size;
+  }, [fetchedRepos, excludeForks, excludeArchived, sortBy]);
 
   // const isLimitFullySelected = selectedRepos.size >= availableSlots;
   const isLimitFullySelected = totalSelected >= maxProjects;
@@ -230,8 +237,9 @@ export function GitHubSyncModal({
       return;
     }
 
-    const visibleRepos = getFilteredRepos();
-    const newReposOnly = visibleRepos.filter((r) => !existingRepoIds.has(r.id));
+    const newReposOnly = filteredRepos.filter(
+      (r) => !existingRepoIds.has(r.id)
+    );
 
     const newSelected = new Set<number>();
 
@@ -302,8 +310,6 @@ export function GitHubSyncModal({
     }
   };
 
-  const filteredRepos = getFilteredRepos();
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl max-h-[85vh] flex flex-col">
@@ -318,16 +324,39 @@ export function GitHubSyncModal({
             {loading
               ? t("loading")
               : t("reposFound", { count: fetchedRepos.length })}
-
-            {/* <Badge className="text-sm font-mono">
-              {usedSlots} / {maxProjects} Used{" "}
-            </Badge> */}
           </DialogDescription>
         </DialogHeader>
 
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+          </div>
+        ) : fetchError ? (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <div className="bg-destructive/10 p-4 rounded-full mb-4">
+              <Info className="w-8 h-8 text-destructive" />
+            </div>
+            <h3 className="font-medium text-lg mb-2">
+              {fetchError === "rate_limit" ? t("rateLimitTitle") : t("fetchErrorTitle")}
+            </h3>
+            <p className="text-sm text-muted-foreground max-w-sm mb-4">
+              {fetchError === "rate_limit" ? t("rateLimitDescription") : t("fetchErrorDescription")}
+            </p>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setFetchError(null);
+                  setFetchedRepos([]);
+                  fetchRepos();
+                }}
+              >
+                {t("tryAgain")}
+              </Button>
+              <Button variant="secondary" onClick={() => onOpenChange(false)}>
+                {t("skipImport")}
+              </Button>
+            </div>
           </div>
         ) : (
           <>
@@ -364,7 +393,9 @@ export function GitHubSyncModal({
               </div>
 
               <div className="flex items-center gap-2 ml-auto">
-                <Label className="text-sm text-muted-foreground">{t("sort")}:</Label>
+                <Label className="text-sm text-muted-foreground">
+                  {t("sort")}:
+                </Label>
                 <select
                   value={sortBy}
                   onChange={(e) =>
@@ -396,123 +427,136 @@ export function GitHubSyncModal({
               {isLimitFullySelected ? (
                 <div className="flex items-center gap-2 text-xs font-medium text-destructive">
                   <Info className="w-4 h-4" />
-                  <span>
-                    {t("limitReached", { max: maxProjects })}
-                  </span>
+                  <span>{t("limitReached", { max: maxProjects })}</span>
                 </div>
               ) : (
                 <span className="text-xs text-muted-foreground">
-                  {t("selectedCount", { selected: totalSelected, remaining: maxProjects - totalSelected })}
+                  {t("selectedCount", {
+                    selected: totalSelected,
+                    remaining: maxProjects - totalSelected,
+                  })}
                 </span>
               )}
             </div>
 
             {/* Repo List */}
             <div className="flex-1 overflow-y-auto space-y-1 min-h-0 pr-2">
-              {filteredRepos.map((repo) => {
-                const isExisting = existingRepoIds.has(repo.id);
-                const isDisabled =
-                  !isExisting &&
-                  isLimitFullySelected &&
-                  !selectedRepos.has(repo.id);
+              {filteredRepos.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground py-12">
+                  <Archive className="w-10 h-10 mb-3 opacity-50" />
+                  <p className="text-sm font-medium">{t("noRepositories")}</p>
+                  <p className="text-xs mt-1">{t("noRepositoriesHint")}</p>
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  {filteredRepos.map((repo) => {
+                    const isExisting = existingRepoIds.has(repo.id);
+                    const isDisabled =
+                      !isExisting &&
+                      isLimitFullySelected &&
+                      !selectedRepos.has(repo.id);
 
-                return (
-                  <div
-                    key={repo.id}
-                    onClick={() =>
-                      !isExisting && !isDisabled && toggleRepoSelection(repo.id)
-                    }
-                    className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${
-                      isExisting || isDisabled
-                        ? "bg-muted/30 border-muted cursor-not-allowed opacity-60"
-                        : selectedRepos.has(repo.id)
-                        ? "bg-primary/5 border-primary/30 cursor-pointer"
-                        : "hover:bg-muted/50 border-transparent cursor-pointer"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3 min-w-0 flex-1">
-                      <Checkbox
-                        checked={isExisting || selectedRepos.has(repo.id)}
-                        onCheckedChange={() =>
-                          !isDisabled && toggleRepoSelection(repo.id)
+                    return (
+                      <div
+                        key={repo.id}
+                        onClick={() =>
+                          !isExisting &&
+                          !isDisabled &&
+                          toggleRepoSelection(repo.id)
                         }
-                        onClick={(e) => e.stopPropagation()}
-                        disabled={isExisting || isDisabled}
-                        className={isExisting ? "opacity-50" : ""}
-                      />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span
-                            className={`font-medium text-sm truncate ${
-                              isExisting ? "text-muted-foreground" : ""
-                            }`}
-                          >
-                            {repo.name}
-                          </span>
-                          {isExisting && (
-                            <Badge
-                              variant="secondary"
-                              className="text-xs px-1.5 py-0 h-5 shrink-0 bg-green-500/10 text-green-600 border-green-500/20"
-                            >
-                              <Check className="w-3 h-3 mr-0.5" />
-                              {t("alreadyInPortfolio")}
-                            </Badge>
-                          )}
-                          {repo.language && !isExisting && (
-                            <Badge
-                              variant="secondary"
-                              className="text-xs px-1.5 py-0 h-5 shrink-0"
-                            >
-                              {repo.language}
-                            </Badge>
-                          )}
-                          {repo.fork && (
-                            <Badge
-                              variant="outline"
-                              className="text-xs px-1.5 py-0 h-5 shrink-0"
-                            >
-                              <GitFork className="w-3 h-3 mr-0.5" />
-                              {t("fork")}
-                            </Badge>
-                          )}
-                          {repo.archived && (
-                            <Badge
-                              variant="outline"
-                              className="text-xs px-1.5 py-0 h-5 shrink-0 text-orange-600"
-                            >
-                              <Archive className="w-3 h-3 mr-0.5" />
-                              {t("archived")}
-                            </Badge>
-                          )}
-                        </div>
-                        {repo.description && (
-                          <p className="text-xs text-muted-foreground truncate mt-0.5">
-                            {repo.description}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div
-                      className={`flex items-center gap-1 shrink-0 ml-2 ${
-                        repo.stargazers_count > 0 && !isExisting
-                          ? "text-foreground"
-                          : "text-muted-foreground/50"
-                      }`}
-                    >
-                      <Star
-                        className={`w-3.5 h-3.5 ${
-                          repo.stargazers_count > 0 && !isExisting
-                            ? "text-yellow-500 fill-yellow-500"
-                            : "text-muted-foreground/40"
+                        className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${
+                          isExisting || isDisabled
+                            ? "bg-muted/30 border-muted cursor-not-allowed opacity-60"
+                            : selectedRepos.has(repo.id)
+                            ? "bg-primary/5 border-primary/30 cursor-pointer"
+                            : "hover:bg-muted/50 border-transparent cursor-pointer"
                         }`}
-                      />
-                      <span className="text-sm font-medium">
-                        {repo.stargazers_count}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
+                      >
+                        <div className="flex items-center gap-3 min-w-0 flex-1">
+                          <Checkbox
+                            checked={isExisting || selectedRepos.has(repo.id)}
+                            onCheckedChange={() =>
+                              !isDisabled && toggleRepoSelection(repo.id)
+                            }
+                            onClick={(e) => e.stopPropagation()}
+                            disabled={isExisting || isDisabled}
+                            className={isExisting ? "opacity-50" : ""}
+                          />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span
+                                className={`font-medium text-sm truncate ${
+                                  isExisting ? "text-muted-foreground" : ""
+                                }`}
+                              >
+                                {repo.name}
+                              </span>
+                              {isExisting && (
+                                <Badge
+                                  variant="secondary"
+                                  className="text-xs px-1.5 py-0 h-5 shrink-0 bg-green-500/10 text-green-600 border-green-500/20"
+                                >
+                                  <Check className="w-3 h-3 mr-0.5" />
+                                  {t("alreadyInPortfolio")}
+                                </Badge>
+                              )}
+                              {repo.language && !isExisting && (
+                                <Badge
+                                  variant="secondary"
+                                  className="text-xs px-1.5 py-0 h-5 shrink-0"
+                                >
+                                  {repo.language}
+                                </Badge>
+                              )}
+                              {repo.fork && (
+                                <Badge
+                                  variant="outline"
+                                  className="text-xs px-1.5 py-0 h-5 shrink-0"
+                                >
+                                  <GitFork className="w-3 h-3 mr-0.5" />
+                                  {t("fork")}
+                                </Badge>
+                              )}
+                              {repo.archived && (
+                                <Badge
+                                  variant="outline"
+                                  className="text-xs px-1.5 py-0 h-5 shrink-0 text-orange-600"
+                                >
+                                  <Archive className="w-3 h-3 mr-0.5" />
+                                  {t("archived")}
+                                </Badge>
+                              )}
+                            </div>
+                            {repo.description && (
+                              <p className="text-xs text-muted-foreground truncate mt-0.5">
+                                {repo.description}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div
+                          className={`flex items-center gap-1 shrink-0 ml-2 ${
+                            repo.stargazers_count > 0 && !isExisting
+                              ? "text-foreground"
+                              : "text-muted-foreground/50"
+                          }`}
+                        >
+                          <Star
+                            className={`w-3.5 h-3.5 ${
+                              repo.stargazers_count > 0 && !isExisting
+                                ? "text-yellow-500 fill-yellow-500"
+                                : "text-muted-foreground/40"
+                            }`}
+                          />
+                          <span className="text-sm font-medium">
+                            {repo.stargazers_count}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             <DialogFooter className="pt-4 border-t flex-col sm:flex-row gap-3">

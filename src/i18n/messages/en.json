@@ -151,7 +151,14 @@
     "skipImport": "Skip Import",
     "importProjects": "Import {count} Projects",
     "canOnlyImport": "You can only import {count} more projects",
-    "noNewProjects": "No new projects to import"
+    "noNewProjects": "No new projects to import",
+    "noRepositories": "No repositories found",
+    "noRepositoriesHint": "Create a repository on GitHub to showcase it here.",
+    "rateLimitTitle": "GitHub API Rate Limit",
+    "rateLimitDescription": "Too many requests to GitHub. Please wait a few minutes and try again.",
+    "fetchErrorTitle": "Failed to Load Repositories",
+    "fetchErrorDescription": "We couldn't fetch your repositories from GitHub. Please check your internet connection and try again.",
+    "tryAgain": "Try Again"
   },
   "settings": {
     "title": "Profile Settings",

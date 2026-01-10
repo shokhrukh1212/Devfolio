@@ -151,7 +151,14 @@
     "skipImport": "Пропустить",
     "importProjects": "Импортировать {count} проектов",
     "canOnlyImport": "Можно импортировать только {count} проектов",
-    "noNewProjects": "Нет новых проектов для импорта"
+    "noNewProjects": "Нет новых проектов для импорта",
+    "noRepositories": "Репозитории не найдены",
+    "noRepositoriesHint": "Создайте репозиторий на GitHub, чтобы добавить его в портфолио.",
+    "rateLimitTitle": "Лимит API GitHub",
+    "rateLimitDescription": "Слишком много запросов к GitHub. Подождите несколько минут и попробуйте снова.",
+    "fetchErrorTitle": "Не удалось загрузить репозитории",
+    "fetchErrorDescription": "Мы не смогли получить ваши репозитории с GitHub. Проверьте подключение к интернету и попробуйте снова.",
+    "tryAgain": "Попробовать снова"
   },
   "settings": {
     "title": "Настройки профиля",
