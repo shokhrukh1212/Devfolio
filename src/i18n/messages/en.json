@@ -14,7 +14,7 @@
   "landing": {
     "hero": {
       "badge": "A ready portfolio in one minute.",
-      "title": "GitHub \u2192 Portfolio \u2192 Show it to employers",
+      "title": "GitHub \u2192 Portfolio \u2192 Get Hired",
       "description": "Transform your GitHub profile into a beautiful developer portfolio. No design skills required. Choose a theme, import your projects, and go live instantly."
     },
     "cta": {
@@ -86,7 +86,8 @@
       "topSources": "Top Traffic Sources",
       "topSourcesDescription": "See which platforms (e.g., Google, social networks) your visitors came through.",
       "unlockData": "Unlock Visitor Data",
-      "onWaitlist": "You're on the waitlist!"
+      "onWaitlist": "You're on the waitlist!",
+      "recordingData": "Recording Data"
     },
     "days": {
       "sun": "Sun",

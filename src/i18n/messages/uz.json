@@ -14,7 +14,7 @@
   "landing": {
     "hero": {
       "badge": "Bir daqiqada tayyor portfolio.",
-      "title": "GitHub \u2192 Portfolio \u2192 Ish beruvchilarga ko'rsating",
+      "title": "GitHub \u2192 Portfolio \u2192 Ish toping",
       "description": "GitHub profilingizni chiroyli dasturchi portfoliosiga aylantiring. Dizayn ko'nikmalari shart emas. Mavzuni tanlang, loyihalaringizni import qiling va darhol jonlantiring."
     },
     "cta": {
@@ -86,7 +86,8 @@
       "topSources": "Trafik manbalari",
       "topSourcesDescription": "Tashrif buyuruvchilaringiz qaysi platformalar (masalan, Google, ijtimoiy tarmoqlar) orqali kirganini ko'ring.",
       "unlockData": "Ma'lumotlarni ochish",
-      "onWaitlist": "Siz kutish ro'yxatidasiz!"
+      "onWaitlist": "Siz kutish ro'yxatidasiz!",
+      "recordingData": "Ma'lumotlar yig'ilmoqda"
     },
     "days": {
       "sun": "Yak",

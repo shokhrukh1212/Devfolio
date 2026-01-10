@@ -2,14 +2,20 @@
 
 import { useState } from "react";
 import { Lock, Check, Loader2 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type FeatureKey = "analytics" | "custom_domain";
 
 interface LockedCardProps {
-  title: string;
+  title: React.ReactNode;
   description: string;
   featureKey: FeatureKey;
   userId: string;

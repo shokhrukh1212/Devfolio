@@ -252,10 +252,20 @@ export function DashboardContent({
       </Card>
 
       {/* Pro Features - Locked Analytics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
         {/* Top Locations */}
         <LockedCard
-          title={t("topLocations")}
+          title={
+            <div className="flex items-center justify-between w-full">
+              <span>{t("topLocations")}</span>
+              <div className="relative">
+                <div className="absolute inset-0 animate-ping bg-green-500 rounded-full opacity-40"></div>
+                <div className="relative px-3 py-1 bg-green-500 text-white text-xs font-medium rounded-full">
+                  {t("recordingData")}
+                </div>
+              </div>
+            </div>
+          }
           description={t("topLocationsDescription")}
           featureKey="analytics"
           userId={profile?.id || ""}
@@ -296,7 +306,17 @@ export function DashboardContent({
 
         {/* Top Sources */}
         <LockedCard
-          title={t("topSources")}
+          title={
+            <div className="flex items-center justify-between w-full">
+              <span>{t("topSources")}</span>
+              <div className="relative">
+                <div className="absolute inset-0 animate-ping bg-green-500 rounded-full opacity-40"></div>
+                <div className="relative px-3 py-1 bg-green-500 text-white text-xs font-medium rounded-full">
+                  {t("recordingData")}
+                </div>
+              </div>
+            </div>
+          }
           description={t("topSourcesDescription")}
           featureKey="analytics"
           userId={profile?.id || ""}
