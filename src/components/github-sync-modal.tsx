@@ -95,7 +95,8 @@ export function GitHubSyncModal({
 
   // Memoize existing repo IDs to prevent infinite re-renders
   const existingRepoIds = useMemo(
-    () => new Set(existingProjects.map((p) => p.github_repo_id).filter(Boolean)),
+    () =>
+      new Set(existingProjects.map((p) => p.github_repo_id).filter(Boolean)),
     [existingProjects]
   );
 
@@ -208,8 +209,19 @@ export function GitHubSyncModal({
     return filtered;
   }, [fetchedRepos, excludeForks, excludeArchived, sortBy]);
 
-  // const isLimitFullySelected = selectedRepos.size >= availableSlots;
-  const isLimitFullySelected = totalSelected >= maxProjects;
+  // Count how many repos are available to select (not already in portfolio)
+  const availableReposCount = filteredRepos.filter(
+    (r) => !existingRepoIds.has(r.id)
+  ).length;
+
+  // Maximum repos user can select is the smaller of: available repos OR available slots
+  const maxSelectableCount = Math.min(availableReposCount, availableSlots);
+
+  // "All selected" means user selected all they can (either all repos or hit the limit)
+  const allAvailableSelected =
+    selectedRepos.size >= maxSelectableCount && selectedRepos.size > 0;
+
+  const isLimitReached = totalSelected >= maxProjects;
 
   // Toggle repo selection (only for NEW repos, not existing ones)
   const toggleRepoSelection = (repoId: number) => {
@@ -232,7 +244,7 @@ export function GitHubSyncModal({
 
   // Select/deselect all visible NEW repos (not existing ones)
   const toggleAllVisible = () => {
-    if (isLimitFullySelected) {
+    if (allAvailableSelected) {
       setSelectedRepos(new Set());
       return;
     }
@@ -337,10 +349,14 @@ export function GitHubSyncModal({
               <Info className="w-8 h-8 text-destructive" />
             </div>
             <h3 className="font-medium text-lg mb-2">
-              {fetchError === "rate_limit" ? t("rateLimitTitle") : t("fetchErrorTitle")}
+              {fetchError === "rate_limit"
+                ? t("rateLimitTitle")
+                : t("fetchErrorTitle")}
             </h3>
             <p className="text-sm text-muted-foreground max-w-sm mb-4">
-              {fetchError === "rate_limit" ? t("rateLimitDescription") : t("fetchErrorDescription")}
+              {fetchError === "rate_limit"
+                ? t("rateLimitDescription")
+                : t("fetchErrorDescription")}
             </p>
             <div className="flex gap-2">
               <Button
@@ -422,9 +438,9 @@ export function GitHubSyncModal({
                 onClick={toggleAllVisible}
                 className="text-xs"
               >
-                {isLimitFullySelected ? t("deselectAll") : t("selectAll")}
+                {allAvailableSelected ? t("deselectAll") : t("selectAll")}
               </Button>
-              {isLimitFullySelected ? (
+              {isLimitReached ? (
                 <div className="flex items-center gap-2 text-xs font-medium text-destructive">
                   <Info className="w-4 h-4" />
                   <span>{t("limitReached", { max: maxProjects })}</span>
@@ -453,7 +469,7 @@ export function GitHubSyncModal({
                     const isExisting = existingRepoIds.has(repo.id);
                     const isDisabled =
                       !isExisting &&
-                      isLimitFullySelected &&
+                      isLimitReached &&
                       !selectedRepos.has(repo.id);
 
                     return (
