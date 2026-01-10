@@ -13,16 +13,25 @@ interface PortfolioPageProps {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: PortfolioPageProps): Promise<Metadata> {
   const { username } = await params;
+  const { preview } = await searchParams;
   const supabase = await createClient();
 
-  const { data: profile } = await supabase
+  const isPreviewMode = preview === "true";
+
+  // Build query - allow unpublished profiles in preview mode
+  let query = supabase
     .from("profiles")
     .select("display_name, bio, avatar_url")
-    .eq("username", username)
-    .eq("is_published", true)
-    .single();
+    .eq("username", username);
+
+  if (!isPreviewMode) {
+    query = query.eq("is_published", true);
+  }
+
+  const { data: profile } = await query.single();
 
   if (!profile) {
     return {
