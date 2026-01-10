@@ -245,7 +245,7 @@
     "syncFailed": "Failed to sync projects",
     "urlCopied": "Portfolio URL copied to clipboard",
     "copyFailed": "Failed to copy URL",
-    "portfolioNotPublished": "Your portfolio is currently hidden. Enable 'Publish Portfolio' in settings to view it.",
+    "portfolioNotPublished": "Your portfolio is currently hidden. Enable 'Publish Portfolio' in settings and save.",
     "feedbackSubmitted": "Thank you for your feedback!",
     "feedbackSubmitFailed": "Failed to submit feedback",
     "feedbackRequired": "Please select a type and enter your feedback"

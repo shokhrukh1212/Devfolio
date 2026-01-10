@@ -209,6 +209,28 @@ export function GitHubSyncModal({
     return filtered;
   }, [fetchedRepos, excludeForks, excludeArchived, sortBy]);
 
+  // The Problem:
+  // The old logic checked selectedRepos.size >= availableReposCount, but when you have more available repos than slots (like 15 repos but only 7 slots because you already have 3 projects), selecting 7 repos is NOT >= 15, so it showed "Select All" even though you selected everything you could.
+
+  // The Fix:
+  // // Maximum you CAN select = smaller of (available repos) or (available slots)
+  // const maxSelectableCount = Math.min(availableReposCount, availableSlots);
+
+  // // "All selected" = you've selected as many as you can
+  // const allAvailableSelected = selectedRepos.size >= maxSelectableCount && selectedRepos.size > 0;
+
+  // Now in your second scenario:
+  // - 3 existing projects → 7 available slots (maxProjects - usedSlots = 10 - 3 = 7)
+  // - 15 available repos (not in portfolio)
+  // - maxSelectableCount = Math.min(15, 7) = 7
+  // - When you select 7 repos: 7 >= 7 && 7 > 0 = true → Shows "Deselect All"
+
+  // And in your first scenario:
+  // - 2 existing projects → 8 available slots
+  // - 2 available repos
+  // - maxSelectableCount = Math.min(2, 8) = 2
+  // - When you select 2 repos: 2 >= 2 && 2 > 0 = true → Shows "Deselect All"
+
   // Count how many repos are available to select (not already in portfolio)
   const availableReposCount = filteredRepos.filter(
     (r) => !existingRepoIds.has(r.id)
