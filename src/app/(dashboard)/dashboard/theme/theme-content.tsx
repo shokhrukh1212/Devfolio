@@ -202,7 +202,7 @@ export function ThemeContent({ profile }: ThemeContentProps) {
             </div>
             <div className="flex-1 ml-4">
               <div className="bg-background rounded-md px-3 py-1 text-xs text-muted-foreground border max-w-md">
-                {profile?.username}.repospace.uz
+                /portfolio/{profile?.username}
               </div>
             </div>
           </div>

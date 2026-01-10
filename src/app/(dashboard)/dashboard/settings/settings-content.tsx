@@ -73,7 +73,8 @@ export function SettingsContent({ profile }: SettingsContentProps) {
   const tCommon = useTranslations("common");
   const tToast = useTranslations("toast");
 
-  const portfolioUrl = `https://${profile?.username}.repospace.uz`;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://repospace.vercel.app";
+  const portfolioUrl = `${appUrl}/portfolio/${profile?.username}`;
 
   const handleCopyUrl = async () => {
     try {
@@ -202,7 +203,7 @@ export function SettingsContent({ profile }: SettingsContentProps) {
                         <span>{t("portfolioStatus.publishDescription")}</span>
                         <span className="inline-flex items-center gap-1.5">
                           <code className="text-xs bg-muted px-1.5 py-0.5 rounded">
-                            {profile?.username}.repospace.uz
+                            /portfolio/{profile?.username}
                           </code>
                           <button
                             type="button"

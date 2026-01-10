@@ -81,11 +81,12 @@ export function DashboardContent({
   // Group analytics by day for chart
   const analyticsData = getAnalyticsChartData(analytics);
 
-  const portfolioUrl = `${profile?.username}.repospace.uz`;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://repospace.vercel.app";
+  const portfolioUrl = `${appUrl}/portfolio/${profile?.username}`;
 
   const handleCopyUrl = async () => {
     try {
-      await navigator.clipboard.writeText(`https://${portfolioUrl}`);
+      await navigator.clipboard.writeText(portfolioUrl);
       setCopied(true);
       toast.success(tToast("urlCopied"));
       setTimeout(() => setCopied(false), 2000);
