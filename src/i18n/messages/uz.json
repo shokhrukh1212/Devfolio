@@ -35,6 +35,11 @@
         "description": "Darhol ulashish mumkin"
       }
     },
+    "video": {
+      "badge": "Demoni ko'ring",
+      "title": "Qanday ishlashini ko'ring",
+      "description": "RepoSpace sizning GitHub'ingizni 60 soniyada ajoyib portfolioga qanday aylantirishini tomosha qiling."
+    },
     "ctaSection": {
       "title": "Birinchi portfolioingizni bugun yarating",
       "description": "RepoSpace yordamida ishlarini namoyish qilayotgan va imkoniyatlarni qo'lga kiritayotgan dasturchilarga qo'shiling."

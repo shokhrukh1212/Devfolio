@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Github, Sparkles, Zap, Globe, ArrowRight } from "lucide-react";
+import { Github, Sparkles, Zap, Globe, ArrowRight, Play } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { LanguageSelector } from "@/components/language-selector";
 import { Logo } from "@/components/ui/logo";
@@ -59,6 +59,54 @@ export default async function HomePage() {
                 {t("landing.cta.getStarted")}
               </Button>
             </Link>
+          </div>
+        </div>
+
+        {/* Video Section */}
+        <div className="mt-20 space-y-8">
+          <div className="text-center space-y-4">
+            <h3 className="text-3xl md:text-4xl font-bold">
+              {t("landing.video.title")}
+            </h3>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              {t("landing.video.description")}
+            </p>
+          </div>
+
+          {/* Video Frame */}
+          <div className="relative max-w-4xl mx-auto">
+            {/* Decorative gradient background */}
+            <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 via-purple-500/20 to-primary/20 rounded-3xl blur-2xl opacity-50 dark:opacity-30" />
+
+            {/* Browser-like frame */}
+            <div className="relative bg-background border border-border rounded-2xl shadow-2xl overflow-hidden">
+              {/* Browser bar */}
+              <div className="bg-muted/50 border-b border-border px-4 py-3 flex items-center gap-3">
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-400" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-400" />
+                  <div className="w-3 h-3 rounded-full bg-green-400" />
+                </div>
+                <div className="flex-1 flex justify-center">
+                  <div className="bg-background/80 rounded-lg px-4 py-1.5 text-xs text-muted-foreground border border-border/50 flex items-center gap-2">
+                    <Play className="w-3 h-3" />
+                    RepoSpace Demo
+                  </div>
+                </div>
+                <div className="w-16" /> {/* Spacer for balance */}
+              </div>
+
+              {/* YouTube iframe */}
+              <div className="aspect-video bg-black">
+                <iframe
+                  src="https://www.youtube.com/embed/2gF8orKXz2g?rel=0&modestbranding=1"
+                  title="RepoSpace Demo Video"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full"
+                />
+              </div>
+            </div>
           </div>
         </div>
 

@@ -35,6 +35,11 @@
         "description": "Share instantly"
       }
     },
+    "video": {
+      "badge": "Watch Demo",
+      "title": "See It In Action",
+      "description": "Watch how RepoSpace transforms your GitHub into a stunning portfolio in under 60 seconds."
+    },
     "ctaSection": {
       "title": "Create your first portfolio today",
       "description": "Join developers who use RepoSpace to showcase their work and land opportunities."
