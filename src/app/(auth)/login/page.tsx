@@ -22,7 +22,8 @@ export default function LoginPage() {
     await supabase.auth.signInWithOAuth({
       provider: "github",
       options: {
-        scopes: "read:user repo",
+        // Only request access to public repos (not private)
+        scopes: "read:user public_repo",
         redirectTo: `${window.location.origin}/callback`,
       },
     });
