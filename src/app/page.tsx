@@ -1,8 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Github, Sparkles, Zap, Globe, ArrowRight, Play } from "lucide-react";
+import {
+  TriangleAlert,
+  Sparkles,
+  Zap,
+  Globe,
+  ArrowRight,
+  Play,
+} from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { LanguageSelector } from "@/components/language-selector";
 import { Logo } from "@/components/ui/logo";
@@ -21,17 +27,27 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <div className="border-b border-amber-500/20 bg-amber-500/10">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:justify-center sm:gap-3">
+          <div className="inline-flex items-center gap-2 font-medium text-amber-200">
+            <TriangleAlert className="h-4 w-4" />
+            <span>{t("landing.maintenance.badge")}</span>
+          </div>
+          <p className="text-amber-100/80">
+            {t("landing.maintenance.description")}
+          </p>
+        </div>
+      </div>
+
       {/* Header */}
       <header className="border-b border-border">
         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
           <Logo size="sm" />
           <div className="flex items-center gap-2">
             <LanguageSelector />
-            <Link href="/login">
-              <Button variant="outline" size="sm">
-                {t("common.signIn")}
-              </Button>
-            </Link>
+            <Button variant="outline" size="sm" disabled>
+              {t("landing.maintenance.cta")}
+            </Button>
           </div>
         </div>
       </header>
@@ -39,6 +55,18 @@ export default async function HomePage() {
       {/* Hero */}
       <main className="max-w-6xl mx-auto px-4 py-20">
         <div className="text-center space-y-8">
+          <div className="mx-auto max-w-3xl rounded-2xl border border-amber-500/20 bg-amber-500/10 px-6 py-5 text-left shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-200">
+              {t("landing.maintenance.badge")}
+            </p>
+            <h1 className="mt-2 text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+              {t("landing.maintenance.title")}
+            </h1>
+            <p className="mt-3 text-sm leading-6 text-muted-foreground md:text-base">
+              {t("landing.maintenance.description")}
+            </p>
+          </div>
+
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
             <Sparkles className="w-4 h-4" />
             {t("landing.hero.badge")}
@@ -53,12 +81,9 @@ export default async function HomePage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/login">
-              <Button size="lg" className="text-base h-12 px-8">
-                <Github className="mr-2 h-5 w-5" />
-                {t("landing.cta.getStarted")}
-              </Button>
-            </Link>
+            <Button size="lg" className="text-base h-12 px-8" disabled>
+              {t("landing.maintenance.cta")}
+            </Button>
           </div>
         </div>
 
@@ -157,12 +182,10 @@ export default async function HomePage() {
           <p className="text-muted-foreground mb-8 max-w-md mx-auto">
             {t("landing.ctaSection.description")}
           </p>
-          <Link href="/login">
-            <Button size="lg">
-              {t("landing.cta.startBuilding")}{" "}
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+          <Button size="lg" disabled>
+            {t("landing.maintenance.cta")}{" "}
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </div>
       </main>
 

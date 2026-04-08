@@ -1,6 +1,5 @@
 "use client";
 
-import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,25 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Github, Sparkles, Zap, Globe } from "lucide-react";
+import { TriangleAlert } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { LanguageSelector } from "@/components/language-selector";
 import { Logo } from "@/components/ui/logo";
 
 export default function LoginPage() {
-  const supabase = createClient();
   const t = useTranslations();
-
-  const handleGitHubLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: "github",
-      options: {
-        // Only request access to public repos (not private)
-        scopes: "read:user public_repo",
-        redirectTo: `${window.location.origin}/callback`,
-      },
-    });
-  };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -50,42 +37,25 @@ export default function LoginPage() {
             <CardDescription>{t("login.description")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <Button
-              onClick={handleGitHubLogin}
-              className="w-full h-12 text-base"
-              size="lg"
-            >
-              <Github className="mr-2 h-5 w-5" />
-              {t("login.continueWithGithub")}
+            <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-4 text-left">
+              <div className="flex items-start gap-3">
+                <TriangleAlert className="mt-0.5 h-5 w-5 text-amber-300" />
+                <div className="space-y-1">
+                  <p className="font-medium text-foreground">
+                    {t("login.maintenance.title")}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {t("login.maintenance.description")}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <Button className="w-full h-12 text-base" size="lg" disabled>
+              {t("login.maintenance.cta")}
             </Button>
           </CardContent>
         </Card>
-
-        {/* Features */}
-        {/* <div className="grid grid-cols-3 gap-4 text-center">
-          <div className="space-y-2">
-            <div className="mx-auto w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <Zap className="h-5 w-5 text-primary" />
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {t("login.quickSetup")}
-            </p>
-          </div>
-          <div className="space-y-2">
-            <div className="mx-auto w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <Sparkles className="h-5 w-5 text-primary" />
-            </div>
-            <p className="text-sm text-muted-foreground">{t("login.themes")}</p>
-          </div>
-          <div className="space-y-2">
-            <div className="mx-auto w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <Globe className="h-5 w-5 text-primary" />
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {t("login.freeSubdomain")}
-            </p>
-          </div>
-        </div> */}
       </div>
     </div>
   );

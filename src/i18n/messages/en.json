@@ -12,6 +12,12 @@
     "feedback": "Feedback"
   },
   "landing": {
+    "maintenance": {
+      "badge": "Temporary notice",
+      "title": "RepoSpace is currently under construction.",
+      "description": "Sign in and portfolio creation are temporarily unavailable while the backend is being rebuilt. Please check back soon.",
+      "cta": "Sign in temporarily unavailable"
+    },
     "hero": {
       "badge": "A ready portfolio in one minute.",
       "title": "GitHub \u2192 Portfolio \u2192 Get Hired",
@@ -53,6 +59,11 @@
     "title": "Welcome",
     "description": "Create your developer portfolio in minutes",
     "continueWithGithub": "Continue with GitHub",
+    "maintenance": {
+      "title": "Sign in is temporarily unavailable",
+      "description": "The backend services for authentication are currently offline while the product is being rebuilt.",
+      "cta": "GitHub sign in unavailable"
+    },
     "quickSetup": "Quick Setup",
     "themes": "3 Themes",
     "freeSubdomain": "Free Subdomain"

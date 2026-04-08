@@ -12,6 +12,12 @@
     "feedback": "Fikr-mulohaza"
   },
   "landing": {
+    "maintenance": {
+      "badge": "Vaqtinchalik e'lon",
+      "title": "RepoSpace hozircha qayta qurilmoqda.",
+      "description": "Backend qayta tiklanayotgan paytda kirish va portfolio yaratish vaqtincha ishlamaydi. Iltimos, keyinroq qayta tekshirib ko'ring.",
+      "cta": "Kirish vaqtincha ishlamaydi"
+    },
     "hero": {
       "badge": "Bir daqiqada tayyor portfolio.",
       "title": "GitHub \u2192 Portfolio \u2192 Ish toping",
@@ -53,6 +59,11 @@
     "title": "Xush kelibsiz",
     "description": "Bir necha daqiqada dasturchi portfolioingizni yarating",
     "continueWithGithub": "GitHub bilan davom etish",
+    "maintenance": {
+      "title": "Kirish vaqtincha ishlamaydi",
+      "description": "Mahsulot qayta qurilayotgan paytda autentifikatsiya uchun backend xizmatlari vaqtincha o'chirilgan.",
+      "cta": "GitHub orqali kirish ishlamaydi"
+    },
     "quickSetup": "Tez sozlash",
     "themes": "3 ta mavzu",
     "freeSubdomain": "Bepul subdomen"
